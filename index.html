@@ -175,7 +175,11 @@
      <div class="grid-container" id="camGrid"></div>
   </div>
   <div class="blank"></div>
-  <div class="footer" id="date"></div>
+  <div class="footer" id="footer">
+    <p> Cam-Fleet is an Open-Source solution based on Google Services to freely manage a fleet of ESP32-CAM</p>
+    <p> Developped by Arthur Van Geersdaele from the work of <a href="https://github.com/theinfoflux/ESP32-CAM-with-Google-drive"> TheInfoFLux </a></p>
+    
+  </div>
 
   <script>
     
@@ -291,14 +295,6 @@
 
     // Refresh only the images every 30 seconds
     setInterval(fetchImages, 30000);
-
-
-
-    // Display today's date below the image
-    var today = new Date();
-    var formattedDate = today.toLocaleDateString();
-    document.getElementById("date").textContent = "Cam-Fleet is an Open-Source solution for ESP32-CAM management created by Arthur Van Geersdaele";
-
 
   </script>
 
