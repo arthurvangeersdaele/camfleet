@@ -1,0 +1,157 @@
+function doPost(e) {
+  const folderName = e.parameters.sourceCam || 'Unknown Cam Source'; // create camsource folder name
+  const jpgName = Utilities.formatDate(new Date(), 'GMT+1', 'yyyyMMdd-HHmmss') + '_' + folderName + '.jpg'; // define jpg name
+  const subFolderName = Utilities.formatDate(new Date(), 'GMT+1', 'yyyyMMdd'); // create day subfolder
+  const requestType = e.parameters.requestType || 'Unknown RequestType'; // define request type (upload, delete)
+  
+  // upload
+  if (requestType == 'upload') {
+    logToFile('Upload request received...');
+    const data = Utilities.base64Decode(e.postData.contents); // decode jpg data
+    const blob = Utilities.newBlob(data, 'image/jpg', jpgName); // define as a jpg
+
+    let folder;
+    const folders = DriveApp.getFoldersByName(folderName);
+    if (folders.hasNext()) {
+      folder = folders.next();
+    } else {
+      folder = DriveApp.createFolder(folderName);
+    }
+
+    let subFolder;
+    const subFolders = folder.getFoldersByName(subFolderName);
+    if (subFolders.hasNext()) {
+      subFolder = subFolders.next();
+    } else {
+      subFolder = folder.createFolder(subFolderName);
+    }
+    const file = subFolder.createFile(blob); // create jpg file
+    logToFile('JPG File created.');
+  }
+  
+  // delete
+  if (requestType == 'delete') {
+    logToFile('Delete request received...');
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1); // Get yesterday's date
+    
+    const folders = DriveApp.getFolders(); // Get all folders in Drive
+    while (folders.hasNext()) {
+      const folder = folders.next();
+      if (folder.getName().includes('ESP32-CAM')) { // Check if folder name contains 'CAM'
+        
+        // Check subfolders with date names in the format yyyyMMdd
+        const subFolders = folder.getFolders();
+        while (subFolders.hasNext()) {
+          const subFolder = subFolders.next();
+          const subFolderName = subFolder.getName();
+          const subFolderDateCreated = subFolder.getDateCreated();
+          if (subFolderDateCreated < yesterday) {
+            deleteFolder(subFolder); // Function to delete the folder and its contents
+          }
+        }
+      }
+    }
+  }
+}
+
+// function to automatically delete >48h files
+function post48DeleteFolders(){
+  logToFile('Automatic delete of any files older than 48h.');
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1); // Get yesterday's date
+    
+    const folders = DriveApp.getFolders(); // Get all folders in Drive
+    while (folders.hasNext()) {
+      const folder = folders.next();
+      if (folder.getName().includes('ESP32-CAM')) { // Check if folder name contains 'CAM'
+        
+        // Check subfolders with date names in the format yyyyMMdd
+        const subFolders = folder.getFolders();
+        while (subFolders.hasNext()) {
+          const subFolder = subFolders.next();
+          const subFolderName = subFolder.getName();
+          const subFolderDateCreated = subFolder.getDateCreated();
+          if (subFolderDateCreated < yesterday) {
+            deleteFolder(subFolder); // Function to delete the folder and its contents
+          }
+        }
+      }
+    }
+}
+
+// Function to delete a folder and its contents
+function deleteFolder(folder) {
+  logToFile('Deletion of all ESP-32 CAM folders older than yesterday.');
+  const files = folder.getFiles();
+  while (files.hasNext()) {
+    const file = files.next();
+    file.setTrashed(true); // Move file to trash
+  }
+
+  const subFolders = folder.getFolders();
+  while (subFolders.hasNext()) {
+    const subFolder = subFolders.next();
+    deleteFolder(subFolder); // Recursively delete subfolders
+  }
+
+  folder.setTrashed(true); // Move folder to trash
+  logToFile('Folder(s) deleted.');
+}
+
+// Function to log to a file
+function logToFile(message) {
+  const logFileName = 'ESP32-CAM_Log.txt'; // Name of the log file
+  
+  // Search for the log file in Google Drive
+  let logFile;
+  const files = DriveApp.getFilesByName(logFileName);
+  if (files.hasNext()) {
+    logFile = files.next();
+  } else {
+    logFile = DriveApp.createFile(logFileName, ''); // Create a new log file if not found
+  }
+  
+  // Append the log message to the file
+  const currentContent = logFile.getBlob().getDataAsString();
+  const newContent = currentContent + '[' + Utilities.formatDate(new Date(), 'GMT+1', 'yyyy-MM-dd HH:mm:ss') + '] ' + message + '\n';
+  logFile.setContent(newContent); // Set the new content
+}
+
+// Function to get a JPG
+function doGet(e) {
+  logToFile('Fetching images from ESP32-CAM folders');
+
+  const folders = DriveApp.getFolders();
+  var esp32CamFolders = [];
+  var result = [];
+
+  while (folders.hasNext()) {
+    var folder = folders.next();
+    if (folder.getName().includes("ESP32-CAM")) {
+      esp32CamFolders.push(folder);
+    }
+  }
+
+  for (var i = 0; i < esp32CamFolders.length; i++) {
+    var subFolders = esp32CamFolders[i].getFolders();
+    if (subFolders.hasNext()) {
+      var subFolder = subFolders.next();
+      var files = subFolder.getFilesByType(MimeType.JPEG);
+      
+      if (files.hasNext()) {
+        var file = files.next();
+        file.setSharing(DriveApp.Access.ANYONE, DriveApp.Permission.VIEW);
+        var publicUrl = file.getUrl();
+        
+        result.push([esp32CamFolders[i].getName(), Utilities.formatDate(file.getDateCreated(), 'GMT+1', 'dd MMM yyyy HH:mm'), publicUrl]);
+      }
+    }
+  }
+
+  return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+}
+
+
+
+
