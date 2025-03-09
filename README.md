@@ -1,4 +1,4 @@
-# CREDEM Cam Fleet
+# Cam Fleet
 ## Introduction
 CREDEM 3DP Camera Fleet est une solution de vidéo surveillance Open-Source. Cette solution permet d’intégrer un ESP32-CAM rapidement à la flotte de caméra déjà en place. Cette 
 solution est utilisée dans le cadre de la surveillance des multiples imprimantes 3D de la plateforme. 
