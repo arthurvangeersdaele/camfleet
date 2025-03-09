@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CREDEM 3DP Camera Fleet</title>
+
+  <style>
+    body {
+      color:#205d7c;
+      background-color: #fbfdfe;
+      font-family: Arial, sans-serif;
+      text-align: center;
+        align-items: center; /* Align icon and text */
+    }
+    .round{
+        width: 150px; 
+        border: 2px solid #5faed6;
+        color:#50b3e5;
+        background-color: #e5f3fb;
+        border-radius:20px;
+        padding: 10px;
+        margin-top: 20px;
+        cursor: pointer;
+    }
+    .round:hover{
+        border: 2px solid #5faed6;
+        background-color:#50b3e5;
+        color: #e5f3fb;
+    }
+    .discrete{
+        width: auto; 
+        margin-right: -50px;
+        font-size:1.1em;
+        border: 2px solid #fbfdfe;
+        color:#c8cacb;
+        background-color: #fbfdfe;
+        border-radius:50%;
+        padding: 10px;
+        margin-top: 20px;
+        cursor: pointer;
+        justify-content: center;
+        align-items: center;
+    }
+    .discrete:hover{
+        color:#fbfdfe;
+        background-color: #c8cacb;
+    }
+    .blank{
+        width:100wv;
+        height:200px;
+    }
+    .footer {
+        position: relative;
+        bottom: 10px; /* Adjust as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        background: #c8cacb;
+        color: #fbfdfe;
+        font-size: 16px;
+    }
+
+    .grid-wrapper {
+        display: flex;
+        justify-content: center; /* Centers the grid */
+        width: 100vw; /* Fix typo from 100wv to 100vw */
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 320px)); /* Distributes columns evenly */
+        gap: 20px;
+        max-width: 100%; /* Prevents overflow */
+        padding: 10px;
+        justify-content: center; /* Centers the grid columns */
+    }
+
+    .camFrame {
+        width: 300px;
+        height: auto;
+        border: 2px solid #ddd;
+        border-radius: 20px;
+        padding: 10px;
+        text-align: center;
+    }
+    .camName {
+
+    }
+    .timeLabel{
+        font-weight: bold; /* Make text bold */
+        white-space: nowrap;
+        display: inline-flex; /* Allows flexible width */
+        align-items: center; /* Align icon and text */
+        width: fit-content; /* Adapt to container */
+        padding: 5px 10px; /* Optional padding */ 
+    }
+    .timeLabel::before {
+        content: "\f017"; /* Unicode clock icon */
+        font-family: "Font Awesome 5 Free";
+        margin-right: 8px; /* Space between icon and text */
+    }
+    .warning{color:#cb374f;}
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius:10px;
+      cursor: zoom-in;
+    }
+    .date {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .loader-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(125vh);
+        margin-top:-50vh;
+    }
+
+        /* Loader Animation */
+        .loader {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #50b3e5;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    .imageViewer{
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 80%;
+        max-height: 80%;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 10px;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 style="color:#205d7c;">CREDEM 3DP Camera Fleet</h1>
+  <button class="round" onclick='goTo("https://drive.google.com/drive/home")'>
+    <a> <i class="fa-brands fa-google-drive"></i> Main Drive </a>
+  </button>
+  <button onclick='goTo("https://drive.google.com/file/d/1zG993jLUDlhb1uvtvYIaUx_iTEQF_1u0/view?usp=sharing")' class="round">
+    <a> <i class="fa-regular fa-newspaper"></i> Logs File </a>
+  </button>
+  <button onclick='goTo("https://docs.google.com/document/d/1rR4R_0bxltTkaj7OxueW5MO841G21m5TPyEvSXErOpg/edit?usp=sharing")' class="discrete" title="Link to READ ME file">
+    <i class="fa-solid fa-circle-info"></i>
+  </button>
+  <!-- <div class='loadingScreen' id='loadingScreen'> Loading </div> -->
+  <div class="loader-container" id='loadingScreen'>
+    <div class="loader"></div>
+</div>
+  <img id="image_viewer" class="imageViewer">
+  <p id="warning" class="warning" style="display:none"> A delay of 1 to 2 minutes is to be expected, for a shot about every 30 seconds. </p>
+  <div class='grid_wrapper'>
+     <div class="grid-container" id="camGrid"></div>
+  </div>
+  <div class="blank"></div>
+  <div class="footer" id="date"></div>
+
+  <script>
+    
+
+    function goTo(url) {
+      window.open(url, '_blank');
+    }
+
+    function createImageUrl(driveUrl) {
+      // Regular expression to extract the file ID from a Google Drive URL
+      var regex = /\/d\/([a-zA-Z0-9_-]+)/;
+      var matches = driveUrl.match(regex);
+      
+      if (matches && matches[1]) {
+        var fileId = matches[1];
+        // Construct the URL to view the image directly
+        var imageUrl = "https://drive.google.com/uc?export=view&id=" + fileId;
+        imageUrl = "https://lh3.googleusercontent.com/d/"+ fileId + "=w800";
+        return imageUrl;
+      } else {
+        throw new Error("Invalid Google Drive URL");
+      }
+    }
+
+    var scriptUrl = 'https://script.google.com/macros/s/AKfycbzD7ZJGEIU0eHfJSmCqQaQ7Gd6U-G9jF-N4SG1hHAaG1lmUWYuZ2XDvVc2d9M9whXAxUA/exec';
+
+    function fetchImages() {
+        fetch(scriptUrl)
+            .then(response => response.json()) // Expecting a JSON array of [ [NAME, TIME, GDurl], ...]
+            .then(data => {
+                data.forEach(([name, time, driveUrl]) => {
+                    let img = document.getElementById("image" + name);
+                    let timeLabel = document.getElementById("time" + name);
+
+                    let camDate = new Date(time); // Ensure `time` is a valid date string
+                    let now = new Date();
+                    let diffInMilliseconds = now - camDate;
+
+                    if (img) {
+                        // Just update the image source and timestamp
+                        img.src = createImageUrl(driveUrl);
+                        if (diffInMilliseconds > 60 * 60 * 1000) {
+                            img.style.opacity=0.5;
+                        }else{
+                            img.style.opacity=1;
+                        }
+                        timeLabel.textContent = `Last updated: ${time}`;
+                    } else {
+                        // If the camFrame doesn't exist, create it (only happens initially)
+                        const container = document.getElementById('camGrid');
+
+                        const camFrame = document.createElement("div");
+                        camFrame.className = "camFrame";
+
+                        // Create img element
+                        img = document.createElement("img");
+                        img.id = "image" + name;
+                        img.src = createImageUrl(driveUrl);
+                        img.alt = `Last image from ${name}`;
+                        camFrame.appendChild(img);
+
+                        // Create cam name display
+                        const nameLabel = document.createElement("p");
+                        nameLabel.textContent = `${name}`;
+                        camFrame.appendChild(nameLabel);
+
+                       // Create last updated display
+                        let timeLabel = document.createElement("p");
+                        timeLabel.classList.add("timeLabel");
+                        timeLabel.id = "time" + name;
+                        timeLabel.textContent = `Last updated: ${time}`;
+
+                        // Correct style assignment
+                        if (diffInMilliseconds > 5 * 60 * 1000) {
+                            timeLabel.style.color = "#dd703e"; // Set text color to orange
+                            img.style.opacity = 1.0;
+                        }
+                         if (diffInMilliseconds > 60 * 60 * 1000) {
+                            timeLabel.style.color = "#cb374f"; // Set text color to red
+                            img.style.opacity = 0.5;
+                        }
+
+                        camFrame.appendChild(timeLabel);
+
+
+                        container.appendChild(camFrame);
+                    }
+                });
+                document.querySelectorAll("img").forEach(img => {
+                    img.addEventListener("mousedown", function() {
+                        let viewer = document.getElementById('image_viewer');
+                        viewer.src = img.src;
+                        viewer.style.opacity = 1;
+                        viewer.style.display = "block"; // Ensure it's visible
+                    });
+
+                    document.body.addEventListener("click", function() {
+                        let viewer = document.getElementById('image_viewer');
+                        viewer.style.opacity = 0;
+                        setTimeout(() => viewer.style.display = "none", 300); // Hide after fade-out
+                    });
+                });
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('warning').style.display = 'block';
+            })
+            .catch(error => {
+                console.error("Error fetching images:", error);
+            });
+    }
+
+    // Fetch images initially
+    fetchImages();
+
+    // Refresh only the images every 30 seconds
+    setInterval(fetchImages, 30000);
+
+
+
+    // Display today's date below the image
+    var today = new Date();
+    var formattedDate = today.toLocaleDateString();
+    document.getElementById("date").textContent = "Today's Date: " + formattedDate;
+
+
+  </script>
+
+</body>
+</html>
