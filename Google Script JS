@@ -56,33 +56,52 @@ function doPost(e) {
 }
 
 // function to automatically delete >48h files
-function post48DeleteFolders(){
-  logToFile('Automatic delete of any files older than 48h.');
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1); // Get yesterday's date
-    
-    const folders = DriveApp.getFolders(); // Get all folders in Drive
-    while (folders.hasNext()) {
-      const folder = folders.next();
-      if (folder.getName().includes('ESP32-CAM')) { // Check if folder name contains 'CAM'
+function post48DeleteFolders() {
+  const twoDaysAgo = new Date();
+  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2); // Get the date 48h ago
+  const cutoffDateStr = Utilities.formatDate(twoDaysAgo, 'GMT+1', 'yyyyMMdd');
+
+  const folders = DriveApp.getFolders(); // Get all folders in Drive
+
+  while (folders.hasNext()) {
+    const folder = folders.next();
+    if (folder.getName().includes('ESP32-CAM')) {
+      const subFolders = folder.getFolders();
+      while (subFolders.hasNext()) {
+        const subFolder = subFolders.next();
+        const subFolderName = subFolder.getName();
         
-        // Check subfolders with date names in the format yyyyMMdd
-        const subFolders = folder.getFolders();
-        while (subFolders.hasNext()) {
-          const subFolder = subFolders.next();
-          const subFolderName = subFolder.getName();
-          const subFolderDateCreated = subFolder.getDateCreated();
-          if (subFolderDateCreated < yesterday) {
-            deleteFolder(subFolder); // Function to delete the folder and its contents
-          }
+        if (/^\d{8}$/.test(subFolderName) && subFolderName < cutoffDateStr) { 
+          deleteFolderPermanently(subFolder);
         }
       }
     }
+  }
+}
+
+// Function to permanently delete a folder and its contents
+function deleteFolderPermanently(folder) {
+  const files = folder.getFiles();
+  while (files.hasNext()) {
+    const file = files.next();
+    DriveApp.removeFile(file); // Permanently delete file
+  }
+
+  const subFolders = folder.getFolders();
+  while (subFolders.hasNext()) {
+    const subFolder = subFolders.next();
+    deleteFolderPermanently(subFolder); // Recursively delete subfolders
+  }
+
+  const parentFolder = folder.getParents();
+  if (parentFolder.hasNext()) {
+    parentFolder.next().removeFolder(folder); // Permanently delete folder
+  }
 }
 
 // Function to delete a folder and its contents
 function deleteFolder(folder) {
-  logToFile('Deletion of all ESP-32 CAM folders older than yesterday.');
+  // logToFile('Deletion of all ESP-32 CAM folders older than yesterday.');
   const files = folder.getFiles();
   while (files.hasNext()) {
     const file = files.next();
@@ -96,7 +115,7 @@ function deleteFolder(folder) {
   }
 
   folder.setTrashed(true); // Move folder to trash
-  logToFile('Folder(s) deleted.');
+  // logToFile('Folder(s) deleted.');
 }
 
 // Function to log to a file
