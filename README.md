@@ -42,3 +42,6 @@ La fréquence de rafraichissement des images sur le site web dépend de 3 facteu
 - use ESP32-CAM calls to Google Script to execute commands on the ESP (index could be used to update a variable in the script)
 - from that, implement LED flashing on demand
 - create a manual for quick implementation of the solution
+- ajouter les liens vers les composants
+- faire un test avec d'autres version d'ESP32-CAM
+- ajouter l'étape de fabrication des boitiers
