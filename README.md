@@ -33,3 +33,7 @@ La fréquence de rafraichissement des images sur le site web dépend de 3 facteu
 - la fréquence d'envoi d'image vers le Google Drive (harcodée à 1jpg/sec, mesurée à ~1jpg/20sec)
 - la rapidité de d'éxécution du Google Script et de l'enregistrement dans le Drive (supposé)
 - la qualité de la connexion Wi-Fi de l'ESP32-CAM (observé)
+
+# TO DO 
+- use ESP32-CAM calls to Google Script to execute commands on the ESP (index could be used to update a variable in the script)
+- from that, implement LED flashing on demand
