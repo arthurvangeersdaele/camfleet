@@ -1,6 +1,10 @@
 # Cam Fleet
+<span style="color:gold; font-weight:bold;">
+La vidéo-surveillance de partout dans le monde pour seulement 10$
+</span>
+
 ## Introduction
-CAM FLEET (or 3DP Camera Fleet) est une solution de vidéo surveillance Open-Source. Cette solution permet d’intégrer un ESP32-CAM rapidement à la flotte de caméra déjà en place. Cette solution est utilisée dans le cadre de la surveillance des multiples imprimantes 3D de la plateforme. 
+CAM FLEET (or 3DP Camera Fleet) est une solution de vidéo surveillance Open-Source. Cette solution permet d’intégrer un ESP32-CAM rapidement à la flotte de caméra déjà en place. Cette solution est utilisée dans le cadre de la surveillance des multiples imprimantes 3D. 
 
 ## Architecture de la solution
 La solution se base sur un compte google et le google drive (de 15Go) associé. Ce compte google donne également accès à Google Script, élément clé du système. 
@@ -37,3 +41,4 @@ La fréquence de rafraichissement des images sur le site web dépend de 3 facteu
 # TO DO 
 - use ESP32-CAM calls to Google Script to execute commands on the ESP (index could be used to update a variable in the script)
 - from that, implement LED flashing on demand
+- create a manual for quick implementation of the solution
