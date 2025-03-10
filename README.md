@@ -45,3 +45,4 @@ La fréquence de rafraichissement des images sur le site web dépend de 3 facteu
 - ajouter les liens vers les composants
 - faire un test avec d'autres version d'ESP32-CAM
 - ajouter l'étape de fabrication des boitiers
+- Alerter sur le fait que les images sont publiques car la clé de déploiement est en clair (bosser sur une version sécurisée ?)
