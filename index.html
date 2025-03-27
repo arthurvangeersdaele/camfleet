@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='87' height='87' viewBox='10 10 34 34' fill='none' stroke='%2350b3e5' stroke-width='2' stroke-linecap='square' stroke-linejoin='arcs'%3E%3Cpath d='M15.6 11.6L22 7v10l-6.4-4.5v-1zM4 5h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 1-2-2V7c0-1.1.9-2 2-2z'/%3E%3C/svg%3E">
+  <title> OS-3DP Camera Fleet </title>
 </head> 
   <style>
     * {
@@ -18,8 +18,32 @@
       background-color: #fbfdfe;
       font-family: Arial, sans-serif;
       text-align: center;
-        align-items: center; /* Align icon and text */
+      align-items: center;
     }
+    .password{
+        border: 2px solid #5faed6; /* Match button border color */
+        border-radius: 20px 0px 0px 20px; /* Rounded edges */
+        padding: 8px 12px; /* Spacing inside input */
+        font-size: 16px;
+        outline: none;
+        background-color: white;
+        color: black;
+    }
+    .password::placeholder {
+        color:#cfe9f8;
+    }
+    .submit-password{
+        border: 2px solid #5faed6; /* Match button border color */
+        border-radius: 0px 20px 20px 0px; /* Rounded edges */
+        padding: 8px 20px; /* Spacing inside input */
+        margin-left: -6px;
+        font-size: 16px;
+        outline: none;
+        background-color: #e5f3fb;
+        color:#50b3e5;
+        cursor: pointer;
+    }
+
     .round{
         width: 150px; 
         border: 2px solid #5faed6;
@@ -31,7 +55,6 @@
         cursor: pointer;
     }
     .round:hover{
-        border: 2px solid #5faed6;
         background-color:#50b3e5;
         color: #e5f3fb;
     }
@@ -59,7 +82,7 @@
     }
     .footer {
         position: relative;
-        bottom: 10px; /* Adjust as needed */
+        bottom: 10px;
         background: transparent;
         color: #7c7d7e;
         font-size: 16px;
@@ -69,34 +92,32 @@
 
     .grid-wrapper {
         display: flex;
-        justify-content: center; /* Centers the grid */
-        width: 100vw; /* Fix typo from 100wv to 100vw */
+        justify-content: center;
+        width: 100vw;
     }
 
     .grid-container {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 320px)); /* Distributes columns evenly */
+        grid-template-columns: repeat(auto-fit, minmax(320px, 320px));
         gap: 20px;
-        max-width: 100%; /* Prevents overflow */
+        max-width: 100%;
         padding: 10px;
-        justify-content: center; /* Centers the grid columns */
+        justify-content: center;
     }
 
     .camFrame {
         width: 300px;
-        height: auto;
         border: 2px solid #ddd;
         border-radius: 20px;
         padding: 10px;
+        padding-bottom: 5px;
         text-align: center;
     }
-    .camName {
 
-    }
     .timeLabel{
         font-weight: bold; /* Make text bold */
-        white-space: nowrap;
         display: inline-flex; /* Allows flexible width */
+        max-width: 100%;
         align-items: center; /* Align icon and text */
         width: fit-content; /* Adapt to container */
         padding: 5px 10px; /* Optional padding */ 
@@ -106,6 +127,19 @@
         font-family: "Font Awesome 5 Free";
         margin-right: 8px; /* Space between icon and text */
     }
+
+    .nameLabel{
+        font-size: 1.5em;
+        display: inline-flex; /* Allows flexible width */
+        max-width: 100%;
+        align-items: center; /* Align icon and text */
+        width: fit-content; /* Adapt to container */
+        margin-top:-5px;
+        margin-bottom:-5px;
+        padding: 2px; /* Optional padding */ 
+        color: #a9a9a9;
+    }
+
     .warning{color:#cb374f;}
 
     img {
@@ -114,35 +148,28 @@
       border-radius:10px;
       cursor: zoom-in;
     }
-    .date {
-      margin-top: 10px;
-      font-size: 16px;
-      color: #555;
-    }
 
     .loader-container {
         display: flex;
         justify-content: center;
         align-items: center;
-/*         height: calc(125vh); */
-/*         margin-top:-50vh; */
-      margin-top: 18vh;
+        margin-top: 18vh;
     }
 
-        /* Loader Animation */
-        .loader {
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #50b3e5;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
+    .loader {
+        border: 6px solid #f3f3f3;
+        border-top: 6px solid #50b3e5;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
     .imageViewer{
         position: fixed;
         top: 10%;
@@ -159,152 +186,304 @@
         z-index: 9999;
     }
   </style>
-</head>
 <body>
 
   <h1 style="color:#205d7c;">OS 3DP Camera Fleet</h1>
-  <button class="round" onclick='goTo("https://drive.google.com/drive/home")'>
-    <a> <i class="fa-brands fa-google-drive"></i> Main Drive </a>
+  <button class="round" title="Go to main GitHub repositiory" onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/tree/main/")'>
+    <a> <i class="fa-brands fa-github"></i> Main Git </a>
   </button>
-  <button onclick='goTo("https://drive.google.com/file/d/1zG993jLUDlhb1uvtvYIaUx_iTEQF_1u0/view?usp=sharing")' class="round">
-    <a> <i class="fa-regular fa-newspaper"></i> Logs File </a>
+  <button class="round" title="Go to READ ME documentation" onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/blob/main/README.md")' >
+    <a> <i class="fa-regular fa-newspaper"></i> READ ME </a>
   </button>
-  <button onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/blob/main/README.md")' class="discrete" title="Link to READ ME file">
-    <i class="fa-solid fa-circle-info"></i>
+  <button id="refresh" onclick='run2()' class="discrete" title="Refresh with most recent image available" style="display:none;">
+    <i class="fa-solid fa-circle-dot" style="margin-right:-22px; z-index:0;"></i> 
+    <i class="fa-solid fa-arrow-rotate-right" style="color:#cb374f; size:1.2em; z-order:1;"></i>
   </button>
-  <!-- <div class='loadingScreen' id='loadingScreen'> Loading </div> -->
+
   <div class="loader-container" id='loadingScreen'>
-    <div class="loader"></div>
-</div>
-  <img id="image_viewer" class="imageViewer">
-  <p id="warning" class="warning" style="display:none"> A delay of 1 to 2 minutes is to be expected, for a shot about every 30 seconds. </p>
-  <div class='grid_wrapper'>
-     <div class="grid-container" id="camGrid"></div>
-  </div>
-  <div class="blank"></div>
-  <div class="footer" id="footer">
-    <p> Cam-Fleet is an Open-Source solution based on Google Services to freely manage a fleet of ESP32-CAM</p>
-    <p> Developped by Arthur Van Geersdaele from the work of <a href="https://github.com/theinfoflux/ESP32-CAM-with-Google-drive"> TheInfoFLux </a></p>
+        <form onsubmit="handleSubmit(event)">
+            <script>
+                function handleSubmit(event) {
+                    event.preventDefault(); // Prevent the form from being submitted
+                    authorize();
+                }
+            </script>
+
+            <input class="password" type="password" id="userInput" placeholder="Password">
+            <button class="submit-password" ><i class="fa-solid fa-right-to-bracket"></i></button>
+        </form>
+        <p id="warning-authorize" class="warning" style="display:none; position: absolute; margin-bottom:-100px;">  <i class="fa-solid fa-spinner"></i> Loading... <br> Please reload the page in case of wrong password input. </p>
+
+    <!-- <div class="loader"></div> <i class="fa-solid fa-fire-extinguisher"></i> -->
   </div>
 
-  <script>
-    
+  <img id="image_viewer" class="imageViewer">
+
+  <p id="warning-delays" class="warning" style="display:none"> A delay of 1 to 2 minutes is to be expected, for a shot about every 30 seconds. </p>
+  <div class='grid_wrapper'>
+     <div class="grid-container" id="imageContainer"></div>
+  </div>
+
+  <div class="blank"></div>
+
+  <div class="footer" id="footer">
+    <p> Cam-Fleet is an Open-Source solution based on Google Services to freely manage a fleet of ESP32-CAM</p>
+    <p> Developed by Arthur Van Geersdaele from the work of <a href="https://github.com/theinfoflux/ESP32-CAM-with-Google-drive"> TheInfoFLux </a></p>
+  </div>
+
+</body>
+
+<script>
+    let authorized = false;
+
+    const OWNER = 'arthurvangeersdaele';
+    const REPO = 'camfleet';
+    const GITHUB_TOKEN_CRYPTED = "X1xJbm9xf1hPBkprWnx2UnkMTmEMTXJISU1cS2hhV1JVcwthdExhUA==";
+    let GITHUB_TOKEN = null;
+
+    function authorize() {
+            // Get the input value
+            let userValue = document.getElementById("userInput").value;
+            GITHUB_TOKEN  = decryptToken(GITHUB_TOKEN_CRYPTED, userValue);
+            authorized = true;
+            document.getElementById("warning-authorize").style.display = "block";
+    }
+
+    function decryptToken(cryptedToken, passcode) {
+        let decrypted = '';
+        let encrypted = atob(cryptedToken); // Decode Base64 first
+        for (let i = 0; i < encrypted.length; i++) {
+            decrypted += String.fromCharCode(
+                encrypted.charCodeAt(i) ^ passcode.charCodeAt(i % passcode.length)
+            );
+        }
+        return decrypted;
+    }
+
+
+    async function fetchRecentImages() {
+        try {
+            const repoUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
+            const response = await fetch(repoUrl, {
+                headers: {
+                    Accept: 'application/vnd.github.v3+json'
+                }
+            });
+
+            if (!response.ok) throw new Error(`Failed to fetch repo contents: ${response.statusText}`);
+
+            const folders = await response.json();
+            const camFolders = folders.filter(item => item.type === 'dir' && item.name.startsWith('ESP32-CAM_'));
+
+            const imageUrls = [];
+
+            for (const folder of camFolders) {
+                const folderUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${folder.name}`;
+                const folderResponse = await fetch(folderUrl, {
+                    headers: {
+                        Accept: 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (!folderResponse.ok) continue;
+
+                const images = await folderResponse.json();
+
+                // Filter for JPG/JPEG images
+                const jpgImages = images.filter(img => 
+                    img.name.endsWith('.jpg') || img.name.endsWith('.jpeg')
+                );
+
+                // Extract timestamps and sort by newest first
+                jpgImages.sort((a, b) => {
+                    const getTimestamp = (filename) => {
+                        const match = filename.match(/^(\d{8}-\d{6})/);
+                        return match ? new Date(
+                            match[1].substring(0, 4),  // Year
+                            match[1].substring(4, 6) - 1,  // Month (0-based)
+                            match[1].substring(6, 8),  // Day
+                            match[1].substring(9, 11), // Hour
+                            match[1].substring(11, 13), // Minute
+                            match[1].substring(13, 15)  // Second
+                        ) : new Date(0);
+                    };
+
+                    return getTimestamp(b.name) - getTimestamp(a.name);
+                });
+
+                // Get the most recent image
+                if (jpgImages.length > 0) {
+                    const mostRecentImage = jpgImages[0];
+                    console.log("Most recent image:", mostRecentImage.name);
+
+
+
+                    const imageMetadataResponse = await fetch(mostRecentImage.url, {
+                        headers: {
+                          Authorization: `Bearer ${GITHUB_TOKEN}`,
+                          Accept: 'application/vnd.github.v3+json'
+                        },
+                    });
+                    // Fetch image creation details from GitHub API
+                    const commitUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?path=${folder.name}/${mostRecentImage.name}&per_page=1`;
+                    const commitResponse = await fetch(commitUrl, {
+                        headers: {
+                          Authorization: `Bearer ${GITHUB_TOKEN}`,
+                          Accept: 'application/vnd.github.v3+json'
+                        },
+                    });
+
+                    const commitData = await commitResponse.json();
+                    let imageTime = commitData.length > 0 ? commitData[0].commit.author.date : 'Unknown';
+                    // Adjust to GMT+1 if valid date
+                    if (imageTime !== 'Unknown') {
+                        const date = new Date(imageTime);
+                        if (!isNaN(date.getTime())) {
+                            // Convert to GMT+1
+                            imageTime = date.toLocaleString('en-GB', {
+                                weekday: 'short',
+                                year: 'numeric',
+                                month: 'short',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit'
+                            });
+                        }
+                    }
+
+                    imageUrls.push({
+                        url: mostRecentImage.download_url,
+                        name: folder.name.replace('ESP32-CAM_', ''),
+                        time: imageTime
+                    });
+                }
+            }
+
+
+            displayImages(imageUrls);
+
+        } catch (error) {
+            console.error('Error fetching images:', error);
+        }
+    }
+    function displayImages(imageUrls) {
+        const container = document.getElementById('imageContainer');
+        container.innerHTML = '';
+        imageUrls.forEach(({ url, name, time }) => {
+            const camFrame = document.createElement('div');
+            camFrame.className = 'camFrame';
+
+            const img = document.createElement('img');
+            img.src = url;
+
+            const nameLabel = document.createElement('p');
+            nameLabel.textContent = `${name}`;
+            nameLabel.classList.add('nameLabel');
+
+            const timeLabel = document.createElement('p');
+            let camDate = new Date(time); // Ensure `time` is a valid date string
+            let now = new Date();
+            let diffInMilliseconds = now - camDate;
+            timeLabel.classList.add("timeLabel");
+            timeLabel.id = "time" + name;
+            timeLabel.innerHTML = `${time}`;
+            // Correct style assignment
+            if (diffInMilliseconds > 5 * 60 * 1000) {
+                timeLabel.style.color = "#dd703e"; // Set text color to orange
+                img.style.opacity = 1.0;
+            }
+             if (diffInMilliseconds > 60 * 60 * 1000) {
+                timeLabel.style.color = "#cb374f"; // Set text color to red
+                img.style.opacity = 0.5;
+            }
+            camFrame.appendChild(img);
+            camFrame.appendChild(nameLabel);
+            camFrame.appendChild(timeLabel);
+
+            container.appendChild(camFrame);
+        });
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('refresh').style.display = 'inline';
+
+        // Wait for authorization before anything
+        
+    }
+
+    if (authorized) {
+            run();
+        } else {
+            // Check authorization status periodically
+            let checkAuth = setInterval(() => {
+                if (authorized) {
+                    run();
+                    clearInterval(checkAuth);
+                }
+            }, 500); // Check every 500ms
+        }
+
+    function run(){
+        fetchRecentImages().then(() => {
+            document.querySelectorAll("img").forEach(img => {
+                img.addEventListener("mousedown", function(event) {
+                    console.log('show image');
+                    let viewer = document.getElementById('image_viewer');
+                    viewer.src = img.src;
+                    viewer.draggable = false;
+                    viewer.style.opacity = 1;
+                    viewer.style.display = "block"; // Ensure it's visible
+
+                    // Prevent event propagation to body click event
+                    event.stopPropagation();
+                });
+            });
+
+            document.body.addEventListener("click", function(event) {
+                let viewer = document.getElementById('image_viewer');
+                if (viewer.style.display === "block") {
+                    viewer.style.opacity = 0;
+                    setTimeout(() => viewer.style.display = "none", 300); // Hide after fade-out
+                }
+            });
+        });
+
+        setInterval(run2, 300000);
+    }
+
+    function run2(){
+        fetchRecentImages().then(() => {
+            document.querySelectorAll("img").forEach(img => {
+                img.addEventListener("mousedown", function(event) {
+                    console.log('show image');
+                    let viewer = document.getElementById('image_viewer');
+                    viewer.src = img.src;
+                    viewer.draggable = false;
+                    viewer.style.opacity = 1;
+                    viewer.style.display = "block"; // Ensure it's visible
+
+                    // Prevent event propagation to body click event
+                    event.stopPropagation();
+                });
+            });
+
+            document.body.addEventListener("click", function(event) {
+                let viewer = document.getElementById('image_viewer');
+                if (viewer.style.display === "block") {
+                    viewer.style.opacity = 0;
+                    setTimeout(() => viewer.style.display = "none", 300); // Hide after fade-out
+                }
+            });
+        });
+
+    }
+
 
     function goTo(url) {
       window.open(url, '_blank');
     }
+</script>
 
-    function createImageUrl(driveUrl) {
-      // Regular expression to extract the file ID from a Google Drive URL
-      var regex = /\/d\/([a-zA-Z0-9_-]+)/;
-      var matches = driveUrl.match(regex);
-      
-      if (matches && matches[1]) {
-        var fileId = matches[1];
-        // Construct the URL to view the image directly
-        var imageUrl = "https://drive.google.com/uc?export=view&id=" + fileId;
-        imageUrl = "https://lh3.googleusercontent.com/d/"+ fileId + "=w800";
-        return imageUrl;
-      } else {
-        throw new Error("Invalid Google Drive URL");
-      }
-    }
-
-    var scriptUrl = 'https://script.google.com/macros/s/AKfycbzD7ZJGEIU0eHfJSmCqQaQ7Gd6U-G9jF-N4SG1hHAaG1lmUWYuZ2XDvVc2d9M9whXAxUA/exec';
-
-    function fetchImages() {
-        fetch(scriptUrl)
-            .then(response => response.json()) // Expecting a JSON array of [ [NAME, TIME, GDurl], ...]
-            .then(data => {
-                data.forEach(([name, time, driveUrl]) => {
-                    let img = document.getElementById("image" + name);
-                    let timeLabel = document.getElementById("time" + name);
-
-                    let camDate = new Date(time); // Ensure `time` is a valid date string
-                    let now = new Date();
-                    let diffInMilliseconds = now - camDate;
-
-                    if (img) {
-                        // Just update the image source and timestamp
-                        img.src = createImageUrl(driveUrl);
-                        if (diffInMilliseconds > 60 * 60 * 1000) {
-                            img.style.opacity=0.5;
-                        }else{
-                            img.style.opacity=1;
-                        }
-                        timeLabel.textContent = `Last updated: ${time}`;
-                    } else {
-                        // If the camFrame doesn't exist, create it (only happens initially)
-                        const container = document.getElementById('camGrid');
-
-                        const camFrame = document.createElement("div");
-                        camFrame.className = "camFrame";
-
-                        // Create img element
-                        img = document.createElement("img");
-                        img.id = "image" + name;
-                        img.src = createImageUrl(driveUrl);
-                        img.alt = `Last image from ${name}`;
-                        img.draggable = false;
-                        camFrame.appendChild(img);
-
-                        // Create cam name display
-                        const nameLabel = document.createElement("p");
-                        nameLabel.textContent = `${name}`;
-                        camFrame.appendChild(nameLabel);
-
-                       // Create last updated display
-                        let timeLabel = document.createElement("p");
-                        timeLabel.classList.add("timeLabel");
-                        timeLabel.id = "time" + name;
-                        timeLabel.textContent = `Last updated: ${time}`;
-
-                        // Correct style assignment
-                        if (diffInMilliseconds > 5 * 60 * 1000) {
-                            timeLabel.style.color = "#dd703e"; // Set text color to orange
-                            img.style.opacity = 1.0;
-                        }
-                         if (diffInMilliseconds > 60 * 60 * 1000) {
-                            timeLabel.style.color = "#cb374f"; // Set text color to red
-                            img.style.opacity = 0.5;
-                        }
-
-                        camFrame.appendChild(timeLabel);
-
-
-                        container.appendChild(camFrame);
-                    }
-                });
-                document.querySelectorAll("img").forEach(img => {
-                    img.addEventListener("mousedown", function() {
-                        let viewer = document.getElementById('image_viewer');
-                        viewer.src = img.src;
-                        viewer.draggable = false;
-                        viewer.style.opacity = 1;
-                        viewer.style.display = "block"; // Ensure it's visible
-                    });
-
-                    document.body.addEventListener("click", function() {
-                        let viewer = document.getElementById('image_viewer');
-                        viewer.style.opacity = 0;
-                        setTimeout(() => viewer.style.display = "none", 300); // Hide after fade-out
-                    });
-                });
-                document.getElementById('loadingScreen').style.display = 'none';
-                document.getElementById('warning').style.display = 'block';
-            })
-            .catch(error => {
-                console.error("Error fetching images:", error);
-            });
-    }
-
-    // Fetch images initially
-    fetchImages();
-
-    // Refresh only the images every 30 seconds
-    setInterval(fetchImages, 30000);
-
-  </script>
 
 </body>
+
 </html>
