@@ -266,7 +266,8 @@
             const repoUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
             const response = await fetch(repoUrl, {
                 headers: {
-                    Accept: 'application/vnd.github.v3+json'
+                          Authorization: `Bearer ${GITHUB_TOKEN}`,
+                          Accept: 'application/vnd.github.v3+json'
                 }
             });
 
@@ -281,7 +282,8 @@
                 const folderUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${folder.name}`;
                 const folderResponse = await fetch(folderUrl, {
                     headers: {
-                        Accept: 'application/vnd.github.v3+json'
+                          Authorization: `Bearer ${GITHUB_TOKEN}`,
+                          Accept: 'application/vnd.github.v3+json'
                     }
                 });
 
