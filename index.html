@@ -6,13 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title> OS-3DP Camera Fleet </title>
 </head> 
-  <style>
+
+<style>
     * {
       user-select: none;  /* Standard users */
       -webkit-user-select: none; /* Safari */
       -moz-user-select: none; /* Firefox */
       -ms-user-select: none; /* IE/Edge */
     }
+
     body {
       color:#205d7c;
       background-color: #fbfdfe;
@@ -20,7 +22,8 @@
       text-align: center;
       align-items: center;
     }
-    .password{
+
+    .password {
         border: 2px solid #5faed6; /* Match button border color */
         border-radius: 20px 0px 0px 20px; /* Rounded edges */
         padding: 8px 12px; /* Spacing inside input */
@@ -28,11 +31,16 @@
         outline: none;
         background-color: white;
         color: black;
+        letter-spacing: 15px;
+        caret-color: transparent;
     }
+
     .password::placeholder {
         color:#cfe9f8;
+        letter-spacing: 2px;
     }
-    .submit-password{
+
+    .submit-password {
         border: 2px solid #5faed6; /* Match button border color */
         border-radius: 0px 20px 20px 0px; /* Rounded edges */
         padding: 8px 20px; /* Spacing inside input */
@@ -44,7 +52,7 @@
         cursor: pointer;
     }
 
-    .round{
+    .round {
         width: 150px; 
         border: 2px solid #5faed6;
         color:#50b3e5;
@@ -54,11 +62,13 @@
         margin-top: 20px;
         cursor: pointer;
     }
-    .round:hover{
+
+    .round:hover {
         background-color:#50b3e5;
         color: #e5f3fb;
     }
-    .discrete{
+
+    .discrete {
         height: auto; 
         aspect-ratio:1/1 !important;
         margin-right: -50px;
@@ -73,17 +83,24 @@
         justify-content: center;
         align-items: center;
     }
-    .discrete:hover{
+
+    .discrete:hover {
         aspect-ratio:1/1 !important;
         color:#fbfdfe;
         background-color: #c8cacb;
         transform: rotate(360deg); /* Rotate the element on hover */
-        transition: transform 1s ease-in-out;
+        transition: transform 0.3s ease-in-out;
     }
-    .blank{
-        width:100wv;
-        height:200px;
+
+    .discrete:active {
+        aspect-ratio:1/1 !important;
+        color:#fbfdfe;
+        opacity:0.5;
+        background-color: #c8cacb;
+        transform: rotate(360deg); /* Rotate the element on hover */
+        animation: spin 0.2s linear infinite;
     }
+
     .footer {
         position: relative;
         bottom: 10px;
@@ -92,6 +109,7 @@
         font-size: 16px;
         border-radius:20px 20px 0px 0px;
         padding: 10px;
+        width:100vw;
     }
 
     .grid-wrapper {
@@ -111,6 +129,7 @@
 
     .camFrame {
         width: 300px;
+        height:auto;
         border: 2px solid #ddd;
         border-radius: 20px;
         padding: 10px;
@@ -118,7 +137,7 @@
         text-align: center;
     }
 
-    .timeLabel{
+    .timeLabel {
         font-weight: bold; /* Make text bold */
         display: inline-flex; /* Allows flexible width */
         max-width: 100%;
@@ -128,13 +147,14 @@
         margin-left:10%;
         margin-right:10%;
     }
+
     .timeLabel::before {
         content: "\f017"; /* Unicode clock icon */
         font-family: "Font Awesome 5 Free";
         margin-right: 8px; /* Space between icon and text */
     }
 
-    .nameLabel{
+    .nameLabel {
         font-size: 1.5em;
         display: inline-flex; /* Allows flexible width */
         max-width: 100%;
@@ -146,31 +166,53 @@
         color: #a9a9a9;
     }
 
-    .warning{color:#cb374f;}
-
-    img {
-      max-width: 100%;
-      max-height: 100%;
-      min-height: 400px;
-      border-radius:10px;
-      cursor: zoom-in;
+    .warning {
+        color:#cb374f;
     }
 
-    .loader-container {
+    img {
+        max-width: 100%;
+        border-radius:10px;
+        cursor: zoom-in;
+    }
+
+    .password-container {
         display: flex;
         justify-content: center;
         align-items: center;
         margin-top: 18vh;
     }
 
-    .loader {
-        border: 6px solid #f3f3f3;
-        border-top: 6px solid #50b3e5;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 1s linear infinite;
+    /* Loader Container - Initially hidden */
+    .loader-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex; /* Add this to make the container a flex container */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
+        z-index: 9999;
+        display: none; /* Hidden by default */
     }
+
+    /* Loader */
+    .loader {
+        position: fixed;
+        border: 6px solid #f3f3f3; /* Light gray background color */
+        border-top: 6px solid #50b3e5; /* Blue color for the top border */
+        border-radius: 50%;
+        width: 50px; /* Size of the spinner */
+        height: 50px; /* Size of the spinner */
+        animation: spin 1s linear infinite; /* Animation to spin the loader */
+        top: calc(50vh - 25px);
+        left: calc(50vw - 25px);
+        z-index:999;
+    }
+
+
     .icon-rotate {
         display: inline-block; /* Ensures it behaves like an inline element */
         animation: rotate 2s linear infinite; /* Rotate the icon every 2 seconds */
@@ -191,7 +233,7 @@
         100% { transform: rotate(360deg); }
     }
 
-    .imageViewer{
+    .imageViewer {
         position: fixed;
         top: 10%;
         left: 50%;
@@ -206,371 +248,329 @@
         transition: opacity 0.3s ease-in-out;
         z-index: 9999;
     }
-  </style>
+</style>
+
 <body>
 
+
+  <!-- Main title of the page -->
   <h1 style="color:#205d7c;">OS 3DP Camera Fleet</h1>
-  <button class="round" title="Go to main GitHub repositiory" onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/tree/main/")'>
+
+  <!-- GitHub Repository Button -->
+  <button class="round" title="Go to main GitHub repository" onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/tree/main/")'>
     <a> <i class="fa-brands fa-github"></i> Main Git </a>
   </button>
-  <button class="round" title="Go to READ ME documentation" onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/blob/main/README.md")' >
+
+  <!-- README Documentation Button -->
+  <button class="round" title="Go to README documentation" onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/blob/main/README.md")'>
     <a> <i class="fa-regular fa-newspaper"></i> READ ME </a>
   </button>
-  <button id="refresh" onclick='run2()' class="discrete" title="Refresh with most recent image available" style="display:none;">
+
+  <!-- Refresh Button (hidden initially) -->
+  <button id="refresh" onclick='refreshData()' class="discrete" title="Refresh with most recent image available" style="display:none;">
     <i class="fa-solid fa-circle-dot" style="margin-right:-22px; z-index:0;"></i> 
-    <i class="fa-solid fa-arrow-rotate-right" style="color:#cb374f; size:1.2em; z-order:1;"></i>
+    <i class="fa-solid fa-arrow-rotate-right" style="color:#cb374f; font-size:1.0em; z-index:1;"></i>
   </button>
 
-  <div class="loader-container" id='loadingScreen'>
-        <form onsubmit="handleSubmit(event)">
-            <script>
-                function handleSubmit(event) {
-                    event.preventDefault(); // Prevent the form from being submitted
-                    authorize();
-                }
-            </script>
+  <!-- Authorization Form -->
+  <div class="password-container" id="logInScreen">
+    <form onsubmit="handleSubmit(event)">
+      <script>
+        // Prevents form submission and triggers authorization function
+        function handleSubmit(event) {
+          event.preventDefault(); // Prevent the form from being submitted
+          authorize();
+        }
+      </script>
 
-            <input class="password" type="password" id="userInput" placeholder="Password">
-            <button class="submit-password" ><i class="fa-solid fa-right-to-bracket"></i></button>
-        </form>
-        <p id="warning-authorize" class="warning" style="display:none; position: absolute; margin-bottom:-100px;">  <i class="fa-solid fa-spinner icon-rotate"></i> Loading... <br> Please reload the page in case of wrong password input. </p>
+      <!-- Password Input Field -->
+      <input class="password" type="password" autofocus maxlength="4" id="userInput" placeholder="Password">
+      <!-- Submit Button for Password -->
+      <button class="submit-password"><i class="fa-solid fa-right-to-bracket"></i></button>
+    </form>
 
-    <!-- <div class="loader"></div> <i class="fa-solid fa-fire-extinguisher"></i> -->
+    <!-- Warning Message if Authorization is Incorrect -->
+    <p id="warning-authorize" class="warning" style="display:none; position: absolute; margin-bottom:-100px;">
+      <i class="fa-solid fa-spinner icon-rotate"></i> Loading... <br> Please reload the page in case of wrong password input. 
+    </p>
   </div>
 
+  <!-- Loading Screen (initially hidden) -->
+  <div class="loader-container" id="loadingScreen" style="display:none">
+      <div class="loader"> </div>
+  </div>
+
+  <!-- Image Viewer (Initial Image Display) -->
   <img id="image_viewer" class="imageViewer">
 
+  <!-- Delay Warning Message -->
   <p id="warning-delays" class="warning" style="display:none"> A delay of 1 to 2 minutes is to be expected, for a shot about every 30 seconds. </p>
+
+  <!-- Grid Wrapper for Image Container -->
   <div class='grid_wrapper'>
-     <div class="grid-container" id="imageContainer"></div>
+    <div class="grid-container" id="imageContainer"></div>
   </div>
 
+  <!-- Blank Space (for layout spacing) -->
   <div class="blank"></div>
 
+  <!-- Footer Information -->
   <div class="footer" id="footer">
     <p> Cam-Fleet is an Open-Source solution based on GitHub Services to freely manage a fleet of ESP32-CAM</p>
     <p> Developed by Arthur Van Geersdaele </p>
   </div>
 
-</body>
+  <script>
+let authorized = false;
+let loaded = false;
 
-<script>
-    let authorized = false;
+const OWNER = 'arthurvangeersdaele';
+const REPO = 'camfleet';
+const GITHUB_TOKEN_CRYPTED = "X1xJbm9xf1hPBkprWnx2UnkMTmEMTXJISU1cS2hhV1JVcwthdExhUA==";
+let GITHUB_TOKEN = null;
 
-    const OWNER = 'arthurvangeersdaele';
-    const REPO = 'camfleet';
-    const GITHUB_TOKEN_CRYPTED = "X1xJbm9xf1hPBkprWnx2UnkMTmEMTXJISU1cS2hhV1JVcwthdExhUA==";
-    let GITHUB_TOKEN = null;
+// Function to handle authorization
+function authorize() {
+    let userValue = document.getElementById("userInput").value;
+    GITHUB_TOKEN = decryptToken(GITHUB_TOKEN_CRYPTED, userValue);
+    console.log('TOKEN:', GITHUB_TOKEN);
+    authorized = true;
+    document.getElementById("warning-authorize").style.display = "block";
+}
 
-    function authorize() {
-            // Get the input value
-            let userValue = document.getElementById("userInput").value;
-            GITHUB_TOKEN  = decryptToken(GITHUB_TOKEN_CRYPTED, userValue);
-            authorized = true;
-            document.getElementById("warning-authorize").style.display = "block";
+// Function to decrypt the GitHub token
+function decryptToken(cryptedToken, passcode) {
+    let decrypted = '';
+    let encrypted = atob(cryptedToken); // Decode Base64
+    for (let i = 0; i < encrypted.length; i++) {
+        decrypted += String.fromCharCode(encrypted.charCodeAt(i) ^ passcode.charCodeAt(i % passcode.length));
     }
+    return decrypted;
+}
 
-    function decryptToken(cryptedToken, passcode) {
-        let decrypted = '';
-        let encrypted = atob(cryptedToken); // Decode Base64 first
-        for (let i = 0; i < encrypted.length; i++) {
-            decrypted += String.fromCharCode(
-                encrypted.charCodeAt(i) ^ passcode.charCodeAt(i % passcode.length)
-            );
-        }
-        return decrypted;
-    }
-
-
-    async function fetchRecentImages() {
+// Function to fetch the recent images from the GitHub repo
+async function fetchRecentImages() {
     try {
-        const repoUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
-        const response = await fetch(repoUrl, {
-            headers: {
-                Authorization: `Bearer ${GITHUB_TOKEN}`,
-                Accept: 'application/vnd.github.v3+json'
-            }
-        });
-
-        if (!response.ok) throw new Error(`Failed to fetch repo contents: ${response.statusText}`);
-
-        const folders = await response.json();
-        const camFolders = folders.filter(item => item.type === 'dir' && item.name.startsWith('ESP32-CAM_'));
-
-        const imageUrls = [];
-
-        for (const folder of camFolders) {
-            // Fetch commit history for the folder
-            const commitUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?path=${folder.name}&per_page=1`;
-            const commitResponse = await fetch(commitUrl, {
-                headers: {
-                    Authorization: `Bearer ${GITHUB_TOKEN}`,
-                    Accept: 'application/vnd.github.v3+json'
-                }
-            });
-
-            if (!commitResponse.ok) {
-                console.error(`Failed to fetch commit history for ${folder.name}`);
-                continue;
-            }
-
-            const commitData = await commitResponse.json();
-            if (commitData.length === 0) {
-                console.log(`No commits found for folder: ${folder.name}`);
-                continue;
-            }
-            else{
-                console.log('Commit Data:', commitData[0]);
-                console.log('Commit Data:', commitData[0].parents[0].url);
-            }
-
-            fetchJsonData(commitData[0].parents[0].url).then(data => {
-               // You can now use 'data' variable here
-               console.log(data.files[0].raw_url);
-               console.log()
-               imageUrls.push({
-                    url: data.files[0].raw_url,
-                    name: folder.name.replace('ESP32-CAM_', ''),
-                    time: extractTimeFromFilename(data.files[0].filename),
-                });
-            });
-
-            // // Get the most recent commit's file details
-            // const mostRecentCommit = commitData[0];
-            
-            // // Check if there are files added in the commit
-            // const commitFiles = mostRecentCommit.files;
-            // if (!commitFiles || commitFiles.length === 0) {
-            //     console.log(`No files added in the most recent commit for folder: ${folder.name}`);
-            //     continue;
-            // }
-
-            // // Filter for files that were added (status === 'added')
-            // const addedFiles = commitFiles.filter(file => file.status === 'added' && 
-            //     (file.filename.endsWith('.jpg') || file.filename.endsWith('.jpeg'))
-            // );
-
-            // if (addedFiles.length > 0) {
-            //     // Get the first added image (most recent added)
-            //     const mostRecentImage = addedFiles[0];
-            //     console.log("Most recent added image:", mostRecentImage.filename);
-
-            //     // Extract commit time from the commit data
-            //     let imageTime = mostRecentCommit.commit.author.date;
-            //     const date = new Date(imageTime);
-            //     if (!isNaN(date.getTime())) {
-            //         // Convert to GMT+1
-            //         imageTime = date.toLocaleString('en-GB', {
-            //             weekday: 'short',
-            //             year: 'numeric',
-            //             month: 'short',
-            //             day: '2-digit',
-            //             hour: '2-digit',
-            //             minute: '2-digit',
-            //             second: '2-digit'
-            //         });
-            //     }
-
-                // imageUrls.push({
-                //     url: mostRecentImage.raw_url,
-                //     name: folder.name.replace('ESP32-CAM_', ''),
-                //     time: imageTime
-                // });
-            //}
-        }
-
-        displayImages(imageUrls);
-
+        const camFolders = await fetchRepoFolders();
+        const imageUrls = await fetchImagesFromFolders(camFolders);
+        await displayImages(imageUrls);
     } catch (error) {
-        console.error('Error fetching last committed added images:', error);
+        console.error('Error fetching images:', error);
     }
 }
 
+// Function to fetch repo folders
+async function fetchRepoFolders() {
+    const repoUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
+    const response = await fetch(repoUrl, {
+        headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!response.ok) throw new Error(`Failed to fetch repo contents: ${response.statusText}`);
+    const folders = await response.json();
+    return folders.filter(item => item.type === 'dir' && item.name.startsWith('ESP32-CAM_'));
+}
+
+// Function to fetch image details from each folder
+async function fetchImagesFromFolders(camFolders) {
+    const imageUrls = [];
+    for (const folder of camFolders) {
+        const commitData = await fetchCommitData(folder.name);
+        if (commitData) {
+            const imageUrl = await fetchImageUrl(commitData);
+            imageUrls.push(imageUrl);
+        }
+    }
+    return imageUrls;
+}
+
+// Function to fetch commit data for a folder
+async function fetchCommitData(folderName) {
+    const commitUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?path=${folderName}&per_page=1`;
+    const commitResponse = await fetch(commitUrl, {
+        headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!commitResponse.ok) {
+        console.error(`Failed to fetch commit history for ${folderName}`);
+        return null;
+    }
+    const commitData = await commitResponse.json();
+    if (commitData.length === 0) return null;
+    return commitData[0];
+}
+
+// Function to fetch image URL from the commit data
+async function fetchImageUrl(commitData) {
+    const parentUrl = commitData.parents[0].url;
+    const data = await fetchJsonData(parentUrl);
+    return {
+        url: data.files[0].raw_url,
+        name: extractCamNameFromFilename(data.files[0].filename),
+        time: extractTimeFromFilename(data.files[0].filename),
+    };
+}
+
+// Function to fetch JSON data from a URL
+async function fetchJsonData(url) {
+    const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!response.ok) throw new Error(`Failed to fetch data: ${response.statusText}`);
+    return response.json();
+}
+
+// Function to extract time from the filename
 function extractTimeFromFilename(filename) {
-    // Regular expression to match the date-time pattern in the filename
-    const regex = /(\d{8})-(\d{6})/; // Matches "YYYYMMDD-HHMMSS"
-    
-    // Extract the date-time match
+    const regex = /(\d{8})-(\d{6})/;
+    const match = filename.match(regex);
+    if (match) {
+        const [dateString, timeString] = [match[1], match[2]];
+        const date = new Date(
+            parseInt(dateString.substring(0, 4), 10),
+            parseInt(dateString.substring(4, 6), 10) - 1,
+            parseInt(dateString.substring(6, 8), 10),
+            parseInt(timeString.substring(0, 2), 10),
+            parseInt(timeString.substring(2, 4), 10),
+            parseInt(timeString.substring(4, 6), 10)
+        );
+        return date;
+    }
+    return null;
+}
+
+// Function to extract source Cam Name from the filename
+function extractCamNameFromFilename(filename) {
+    const regex = /ESP32-CAM_(\w+)(?=\/\d{8}-\d{6})/;
     const match = filename.match(regex);
 
     if (match) {
-        // Extracted date and time components
-        const dateString = match[1]; // "20250328" (YYYYMMDD)
-        const timeString = match[2]; // "105350" (HHMMSS)
-        
-        // Create a date object using the extracted components
-        const year = parseInt(dateString.substring(0, 4), 10);
-        const month = parseInt(dateString.substring(4, 6), 10) - 1; // Month is 0-based in JavaScript
-        const day = parseInt(dateString.substring(6, 8), 10);
-        
-        const hours = parseInt(timeString.substring(0, 2), 10);
-        const minutes = parseInt(timeString.substring(2, 4), 10);
-        const seconds = parseInt(timeString.substring(4, 6), 10);
+        const camName = match[1];  // Captured camera name (e.g., 'Nomad')
+        return camName;
+    }
 
-        // Create a new Date object with the extracted values
-        const date = new Date(year, month, day, hours, minutes, seconds);
+    return null;
+}
 
-        // Optionally, format the date to a more readable format
-        const formattedDate = date.toLocaleString('en-GB', {
-            weekday: 'short', year: 'numeric', month: 'short', day: '2-digit',
-            hour: '2-digit', minute: '2-digit', second: '2-digit'
-        });
+// Function to display the images in the UI
+async function displayImages(imageUrls) {
+    const container = document.getElementById('imageContainer');
+    container.innerHTML = '';
+    imageUrls.forEach(({ url, name, time }) => {
+        const camFrame = createCamFrame(url, name, time);
+        container.appendChild(camFrame);
+    });
+}
 
-        console.log("Extracted Date:", formattedDate);
-        return date;  // Return the Date object if needed
-    } else {
-        console.log("No timestamp found in the filename");
-        return null;  // Return null if no match was found
+// Function to create a single camera frame with an image and its metadata
+function createCamFrame(url, name, time) {
+    const camFrame = document.createElement('div');
+    camFrame.className = 'camFrame';
+
+    const img = document.createElement('img');
+    img.src = url;
+
+    const nameLabel = document.createElement('p');
+    nameLabel.textContent = name;
+    nameLabel.classList.add('nameLabel');
+
+    const timeLabel = createTimeLabel(time);
+    camFrame.appendChild(img);
+    camFrame.appendChild(nameLabel);
+    camFrame.appendChild(timeLabel);
+
+    return camFrame;
+}
+
+// Function to create a time label
+function createTimeLabel(time) {
+    let camDate = new Date(time);
+    let formattedDate = formatDate(camDate);
+    let timeLabel = document.createElement('p');
+    timeLabel.classList.add("timeLabel");
+    timeLabel.textContent = formattedDate;
+
+    styleTimeLabel(timeLabel, camDate);
+    return timeLabel;
+}
+
+// Function to format the date into a readable string
+function formatDate(date) {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${day}/${month}/${year} - ${hours}h${minutes}`;
+}
+
+// Function to style the time label based on the image age
+function styleTimeLabel(timeLabel, camDate) {
+    let now = new Date();
+    let diffInMilliseconds = now - camDate;
+    if (diffInMilliseconds > 60 * 60 * 1000) {
+        timeLabel.style.color = "#cb374f"; // Red color for older images
+    } else if (diffInMilliseconds > 5 * 60 * 1000) {
+        timeLabel.style.color = "#dd703e"; // Orange color for medium age images
     }
 }
 
+// Function to open a URL in a new window
+function goTo(url) {
+    window.open(url, '_blank');
+}
 
-async function fetchJsonData(url) {
-    try {
-        // Fetch the data from the URL
-        const response = await fetch(url);
+// Function to handle the refresh logic
+function refreshData() {
 
-        // Check if the response is successful
-        if (!response.ok) {
-            throw new Error(`Failed to fetch data: ${response.statusText}`);
+    fetchRecentImages().then(() => {
+        addImageClickListeners();
+        if(!loaded){
+          document.getElementById('loadingScreen').style.display = 'none';
+          loaded = true;
         }
-
-        // Parse the response as JSON
-        const data = await response.json();
-
-        // Store the data in a variable
-        console.log(data);  // You can store this data in a variable for further use
-        return data;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-    }
+    });
+    setInterval(refreshData, 300000); // Refresh every 5 minutes
 }
-    function displayImages(imageUrls) {
-        const container = document.getElementById('imageContainer');
-        container.innerHTML = '';
-        imageUrls.forEach(({ url, name, time }) => {
-            const camFrame = document.createElement('div');
-            camFrame.className = 'camFrame';
 
-            const img = document.createElement('img');
-            img.src = url;
-
-            const nameLabel = document.createElement('p');
-            nameLabel.textContent = `${name}`;
-            nameLabel.classList.add('nameLabel');
-
-            const timeLabel = document.createElement('p');
-            let camDate = new Date(time); // Ensure `time` is a valid date string
-            // Format the date as "dd/mm/YYYY - HHhmm"
-            let day = camDate.getDate().toString().padStart(2, '0'); // Adds leading zero if day < 10
-            let month = (camDate.getMonth() + 1).toString().padStart(2, '0'); // Get month (0-based) and add leading zero
-            let year = camDate.getFullYear();
-            let hours = camDate.getHours().toString().padStart(2, '0'); // Adds leading zero if hours < 10
-            let minutes = camDate.getMinutes().toString().padStart(2, '0'); // Adds leading zero if minutes < 10
-
-            // Combine into desired format: "dd/mm/YYYY - HHhmm"
-            let formattedDate = `${day}/${month}/${year} - ${hours}h${minutes}`;
-            let now = new Date();
-            let diffInMilliseconds = now - camDate;
-            timeLabel.classList.add("timeLabel");
-            timeLabel.id = "time" + name;
-            timeLabel.innerHTML = `${formattedDate}`;
-            // Correct style assignment
-            if (diffInMilliseconds > 5 * 60 * 1000) {
-                timeLabel.style.color = "#dd703e"; // Set text color to orange
-                img.style.opacity = 1.0;
-            }
-             if (diffInMilliseconds > 60 * 60 * 1000) {
-                timeLabel.style.color = "#cb374f"; // Set text color to red
-                img.style.opacity = 0.5;
-            }
-            camFrame.appendChild(img);
-            camFrame.appendChild(nameLabel);
-            camFrame.appendChild(timeLabel);
-
-            container.appendChild(camFrame);
+// Function to add event listeners to images for viewing
+function addImageClickListeners() {
+    document.querySelectorAll("img").forEach(img => {
+        img.addEventListener("mousedown", event => {
+            let viewer = document.getElementById('image_viewer');
+            viewer.src = img.src;
+            viewer.style.display = "block";
+            event.stopPropagation();
         });
-        document.getElementById('loadingScreen').style.display = 'none';
-        document.getElementById('refresh').style.display = 'inline';
+    });
 
-        // Wait for authorization before anything
-        
-    }
+    document.body.addEventListener("click", () => {
+        let viewer = document.getElementById('image_viewer');
+        if (viewer.style.display === "block") {
+            viewer.style.display = "none";
+        }
+    });
+}
 
+
+let checkAuthInterval = setInterval(() => {
     if (authorized) {
-            run();
-        } else {
-            // Check authorization status periodically
-            let checkAuth = setInterval(() => {
-                if (authorized) {
-                    run();
-                    clearInterval(checkAuth);
-                }
-            }, 500); // Check every 500ms
-        }
+        // Once authorized, hide loading screen and show refresh button
+        document.getElementById('logInScreen').style.display = 'none';
+        document.getElementById('refresh').style.display = 'inline';
+        document.getElementById('loadingScreen').style.display = 'block';
 
-    function run(){
-        fetchRecentImages().then(() => {
-            document.querySelectorAll("img").forEach(img => {
-                img.addEventListener("mousedown", function(event) {
-                    console.log('show image');
-                    let viewer = document.getElementById('image_viewer');
-                    viewer.src = img.src;
-                    viewer.draggable = false;
-                    viewer.style.opacity = 1;
-                    viewer.style.display = "block"; // Ensure it's visible
+        // Call refreshData() once authorized
+        refreshData();
 
-                    // Prevent event propagation to body click event
-                    event.stopPropagation();
-                });
-            });
-
-            document.body.addEventListener("click", function(event) {
-                let viewer = document.getElementById('image_viewer');
-                if (viewer.style.display === "block") {
-                    viewer.style.opacity = 0;
-                    setTimeout(() => viewer.style.display = "none", 300); // Hide after fade-out
-                }
-            });
-        });
-
-        setInterval(run2, 300000);
+        // Clear the interval once authorized
+        clearInterval(checkAuthInterval);
     }
+}, 500); // Check every 500ms
 
-    function run2(){
-        fetchRecentImages().then(() => {
-            document.querySelectorAll("img").forEach(img => {
-                img.addEventListener("mousedown", function(event) {
-                    console.log('show image');
-                    let viewer = document.getElementById('image_viewer');
-                    viewer.src = img.src;
-                    viewer.draggable = false;
-                    viewer.style.opacity = 1;
-                    viewer.style.display = "block"; // Ensure it's visible
-
-                    // Prevent event propagation to body click event
-                    event.stopPropagation();
-                });
-            });
-
-            document.body.addEventListener("click", function(event) {
-                let viewer = document.getElementById('image_viewer');
-                if (viewer.style.display === "block") {
-                    viewer.style.opacity = 0;
-                    setTimeout(() => viewer.style.display = "none", 300); // Hide after fade-out
-                }
-            });
-        });
-
-    }
-
-
-    function goTo(url) {
-      window.open(url, '_blank');
-    }
 </script>
-
 
 </body>
 
+
+
 </html>
+ 
