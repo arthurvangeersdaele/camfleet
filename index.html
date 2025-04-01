@@ -33,6 +33,7 @@
         color: black;
         letter-spacing: 15px;
         caret-color: transparent;
+        max-width:50vw;
     }
 
     .password::placeholder {
@@ -52,7 +53,7 @@
         cursor: pointer;
     }
 
-    .round {
+    .round-blue {
         width: 150px; 
         border: 2px solid #5faed6;
         color:#50b3e5;
@@ -63,9 +64,25 @@
         cursor: pointer;
     }
 
-    .round:hover {
+    .round-blue:hover {
         background-color:#50b3e5;
         color: #e5f3fb;
+    }
+
+  .round-grey {
+        width: 150px; 
+        border: 2px solid #c8cacb;
+        color:#c8cacb;
+        background-color: transparent;
+        border-radius:20px;
+        padding: 5px;
+        margin-top: 20px;
+        cursor: pointer;
+    }
+
+    .round-grey:hover {
+        background-color:#c8cacb;
+        color: #fff;
     }
 
     .discrete {
@@ -127,6 +144,15 @@
         justify-content: center;
     }
 
+    .center-container{
+        display: block;
+        max-width: 100vw;
+        min-width: 100vw;
+        width: 100vw;
+        padding: 10px;
+        justify-content: center;
+    }
+
     .camFrame {
         width: 300px;
         height:auto;
@@ -175,7 +201,9 @@
         border-radius:10px;
         cursor: zoom-in;
     }
+    a{
 
+    }
     .password-container {
         display: flex;
         justify-content: center;
@@ -244,7 +272,7 @@
         background: rgba(0, 0, 0, 0.8);
         border-radius: 10px;
         display: none;
-        opacity: 0;
+        opacity: 1;
         transition: opacity 0.3s ease-in-out;
         z-index: 9999;
     }
@@ -257,17 +285,17 @@
   <h1 style="color:#205d7c;">OS 3DP Camera Fleet</h1>
 
   <!-- GitHub Repository Button -->
-  <button class="round" title="Go to main GitHub repository" onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/tree/main/")'>
+  <button class="round-blue" title="Go to main GitHub repository" onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/tree/main/")'>
     <a> <i class="fa-brands fa-github"></i> Main Git </a>
   </button>
 
   <!-- README Documentation Button -->
-  <button class="round" title="Go to README documentation" onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/blob/main/README.md")'>
+  <button class="round-blue" title="Go to README documentation" onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/blob/main/README.md")'>
     <a> <i class="fa-regular fa-newspaper"></i> READ ME </a>
   </button>
 
   <!-- Refresh Button (hidden initially) -->
-  <button id="refresh" onclick='refreshData()' class="discrete" title="Refresh with most recent image available" style="display:none;">
+  <button id="refresh" onclick='refreshData()' class="discrete" title="Refresh with the most recent image available" style="display:none;">
     <i class="fa-solid fa-circle-dot" style="margin-right:-22px; z-index:0;"></i> 
     <i class="fa-solid fa-arrow-rotate-right" style="color:#cb374f; font-size:1.0em; z-index:1;"></i>
   </button>
@@ -291,7 +319,7 @@
 
     <!-- Warning Message if Authorization is Incorrect -->
     <p id="warning-authorize" class="warning" style="display:none; position: absolute; margin-bottom:-100px;">
-      <i class="fa-solid fa-spinner icon-rotate"></i> Loading... <br> Please reload the page in case of wrong password input. 
+      <i class="fa-solid fa-face-frown icon-rotate"></i> Wrong password <br> Password forgotten ? Contact repo owner ...
     </p>
   </div>
 
@@ -311,31 +339,82 @@
     <div class="grid-container" id="imageContainer"></div>
   </div>
 
+  <!-- Secondary buttons (initially hidden) --> 
+  <div id="secondary-buttons" class="center-container" style="display:none;">
+    <!-- download repo files as a zip --> 
+    <button class="round-grey" title="Download .ZIP file with 48h old archives" onclick='goTo(getRepoZipUrl())'>
+      <a> <i class="fa-solid fa-file-zipper"></i> Download files </a>
+    </button>
+    <!-- contact repo owner -->
+    <button class="round-grey" title="Contact repo owner" onclick='goTo(`https://github.com/${OWNER}`)'>
+      <a> <i class="fa-solid fa-user"></i> Contact Owner </a>
+    </button>
+
+
+    <!-- contact repo owner -->
+    <button class="round-grey" title="Contact project developer" onclick='goTo("https://github.com/arthurvangeersdaele")'>
+      <a> <i class="fa-solid fa-lightbulb"></i> Contact Developer </a>
+    </button>
+  </div>
+
   <!-- Blank Space (for layout spacing) -->
   <div class="blank"></div>
 
   <!-- Footer Information -->
   <div class="footer" id="footer">
-    <p> Cam-Fleet is an Open-Source solution based on GitHub Services to freely manage a fleet of ESP32-CAM</p>
-    <p> Developed by Arthur Van Geersdaele </p>
+    <p> Cam-Fleet is an Open-Source solution based on GitHub Services to freely manage a fleet of ESP32-CAM.</p>
+    <p style="font-size:10px"> Developed by Arthur VG DG</p>
+    <p style="font-size:10px"> Copyright 2025, <a href='http://www.apache.org/licenses/'> Apache License v2.0, Jan 2004 </a></p>
   </div>
 
   <script>
+// _    _   ______   ______  ______     ______  ______   ______   ______ 
+// | |  | | / |      | |     | |  | \       / / / |  | \ | |  \ \ | |     
+// | |  | | '------. | |---- | |__| |    .---'  | |  | | | |  | | | |---- 
+// \_|__|_|  ____|_/ |_|____ |_|  \_\   /_/___  \_|__|_/ |_|  |_| |_|____ 
+
+const OWNER = 'arthurvangeersdaele'; // replace by your own github name, please do not keep mine as you won't be able to authenticate
+const GITHUB_TOKEN_CRYPTED = "X1xJbm9xf1hPBkprWnx2UnkMTmEMTXJISU1cS2hhV1JVcwthdExhUA=="; // replace with your own crypted token (see README documentation)
+const GMT = 2; //GMT+2
+
+
+
+// _____    ______   ______   ______   ______  ______     ______  ______   ______   ______ 
+// | | \ \  | |  | | | |  \ \ | | ____ | |     | |  | \       / / / |  | \ | |  \ \ | |     
+// | |  | | | |__| | | |  | | | |  | | | |---- | |__| |    .---'  | |  | | | |  | | | |---- 
+// |_|_/_/  |_|  |_| |_|  |_| |_|__|_| |_|____ |_|  \_\   /_/___  \_|__|_/ |_|  |_| |_|____ 
+
+const REPO = 'camfleet'; // replace ONLY if you changed the repository name
+
+// (X) do not change anything below (X)
+let GITHUB_TOKEN = null;
 let authorized = false;
 let loaded = false;
 
-const OWNER = 'arthurvangeersdaele';
-const REPO = 'camfleet';
-const GITHUB_TOKEN_CRYPTED = "X1xJbm9xf1hPBkprWnx2UnkMTmEMTXJISU1cS2hhV1JVcwthdExhUA==";
-let GITHUB_TOKEN = null;
-
 // Function to handle authorization
-function authorize() {
+async function authorize() {
     let userValue = document.getElementById("userInput").value;
     GITHUB_TOKEN = decryptToken(GITHUB_TOKEN_CRYPTED, userValue);
     console.log('TOKEN:', GITHUB_TOKEN);
-    authorized = true;
-    document.getElementById("warning-authorize").style.display = "block";
+    // verifying header token
+    const mainUrl = `https://api.github.com/repos/${OWNER}/${REPO}`;
+    try{
+    const response = await fetch(mainUrl, {
+        headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (response.ok){
+      authorized = true;
+      document.activeElement.blur();
+    } else{
+      document.getElementById("warning-authorize").style.display = "block";
+      document.getElementById("footer").style.display = "none";
+      document.getElementById("userInput").value = "";
+    }
+  } catch {
+      document.getElementById("warning-authorize").style.display = "block";
+      document.getElementById("footer").style.display = "none";
+      document.getElementById("userInput").value = "";
+    }
 }
 
 // Function to decrypt the GitHub token
@@ -352,6 +431,7 @@ function decryptToken(cryptedToken, passcode) {
 async function fetchRecentImages() {
     try {
         const camFolders = await fetchRepoFolders();
+        console.log(camFolders);
         const imageUrls = await fetchImagesFromFolders(camFolders);
         await displayImages(imageUrls);
     } catch (error) {
@@ -400,12 +480,14 @@ async function fetchCommitData(folderName) {
 
 // Function to fetch image URL from the commit data
 async function fetchImageUrl(commitData) {
-    const parentUrl = commitData.parents[0].url;
+    console.log(commitData);
+    const parentUrl = commitData.url;
     const data = await fetchJsonData(parentUrl);
+    const imageFile = data.files[0];
     return {
-        url: data.files[0].raw_url,
-        name: extractCamNameFromFilename(data.files[0].filename),
-        time: extractTimeFromFilename(data.files[0].filename),
+        url: imageFile.raw_url,
+        name: extractCamNameFromFilename(imageFile.filename),
+        time: extractTimeFromFilename(imageFile.filename),
     };
 }
 
@@ -455,8 +537,13 @@ async function displayImages(imageUrls) {
     const container = document.getElementById('imageContainer');
     container.innerHTML = '';
     imageUrls.forEach(({ url, name, time }) => {
-        const camFrame = createCamFrame(url, name, time);
-        container.appendChild(camFrame);
+      if (url.includes('.jpg') && url.includes('ESP32-CAM_')) { 
+          const camFrame = createCamFrame(url, name, time);
+          container.appendChild(camFrame);
+      }
+      else{
+        console.error('A commit is does not contains an image')
+      }
     });
 }
 
@@ -467,6 +554,7 @@ function createCamFrame(url, name, time) {
 
     const img = document.createElement('img');
     img.src = url;
+    img.setAttribute("draggable", "false");
 
     const nameLabel = document.createElement('p');
     nameLabel.textContent = name;
@@ -483,6 +571,8 @@ function createCamFrame(url, name, time) {
 // Function to create a time label
 function createTimeLabel(time) {
     let camDate = new Date(time);
+    timeshift = GMT - 1 ; // ESP32-CAM are coded on GMT+1
+    camDate.setHours(camDate.getHours() + timeshift);
     let formattedDate = formatDate(camDate);
     let timeLabel = document.createElement('p');
     timeLabel.classList.add("timeLabel");
@@ -506,9 +596,9 @@ function formatDate(date) {
 function styleTimeLabel(timeLabel, camDate) {
     let now = new Date();
     let diffInMilliseconds = now - camDate;
-    if (diffInMilliseconds > 60 * 60 * 1000) {
+    if (diffInMilliseconds > 2 * 60 * 60 * 1000) {
         timeLabel.style.color = "#cb374f"; // Red color for older images
-    } else if (diffInMilliseconds > 5 * 60 * 1000) {
+    } else if (diffInMilliseconds > 10 * 60 * 1000) {
         timeLabel.style.color = "#dd703e"; // Orange color for medium age images
     }
 }
@@ -533,17 +623,18 @@ function refreshData() {
 
 // Function to add event listeners to images for viewing
 function addImageClickListeners() {
+    let viewer = document.getElementById('image_viewer');
+    viewer.setAttribute("draggable", "false");
     document.querySelectorAll("img").forEach(img => {
         img.addEventListener("mousedown", event => {
-            let viewer = document.getElementById('image_viewer');
             viewer.src = img.src;
             viewer.style.display = "block";
+            console.log('test');
             event.stopPropagation();
         });
     });
 
     document.body.addEventListener("click", () => {
-        let viewer = document.getElementById('image_viewer');
         if (viewer.style.display === "block") {
             viewer.style.display = "none";
         }
@@ -557,6 +648,7 @@ let checkAuthInterval = setInterval(() => {
         document.getElementById('logInScreen').style.display = 'none';
         document.getElementById('refresh').style.display = 'inline';
         document.getElementById('loadingScreen').style.display = 'block';
+        document.getElementById('secondary-buttons').style.display = 'block';
 
         // Call refreshData() once authorized
         refreshData();
@@ -565,6 +657,10 @@ let checkAuthInterval = setInterval(() => {
         clearInterval(checkAuthInterval);
     }
 }, 500); // Check every 500ms
+
+function getRepoZipUrl(branch = "main") {
+    return `https://github.com/${OWNER}/${REPO}/archive/refs/heads/${branch}.zip`;
+}
 
 </script>
 
