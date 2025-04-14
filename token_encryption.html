@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encrypt GitHub Token</title>
+</head>
+<body>
+    <h2>Encrypt Your GitHub Token</h2>
+    <label for="token">Enter GitHub Token:</label>
+    <input type="text" id="token" placeholder="Enter token here">
+    <br><br>
+    <label for="passcode">Enter Passcode:</label>
+    <input type="text" id="passcode" placeholder="Enter passcode here">
+    <br><br>
+    <button onclick="encryptAndDisplay()">Encrypt Token</button>
+    <h3>Encrypted Token:</h3>
+    <p id="encryptedOutput"></p>
+
+    <script>
+        function encryptToken(token, passcode) {
+            let encrypted = '';
+            for (let i = 0; i < token.length; i++) {
+                encrypted += String.fromCharCode(
+                    token.charCodeAt(i) ^ passcode.charCodeAt(i % passcode.length)
+                );
+            }
+            return btoa(encrypted); // Encode in base64 for readability
+        }
+
+        function encryptAndDisplay() {
+            const token = document.getElementById('token').value;
+            const passcode = document.getElementById('passcode').value;
+            if (token && passcode) {
+                const encryptedToken = encryptToken(token, passcode);
+                document.getElementById('encryptedOutput').textContent = encryptedToken;
+            } else {
+                alert("Please enter both token and passcode.");
+            }
+        }
+    </script>
+</body>
+</html>

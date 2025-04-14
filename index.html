@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="icon" href="https://github.com/favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> OS-3DP Camera Fleet </title>
+</head> 
+
+<style>
+    * {
+      user-select: none;  /* Standard users */
+      -webkit-user-select: none; /* Safari */
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* IE/Edge */
+    }
+
+    body {
+      color:#205d7c;
+      background-color: #fbfdfe;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      align-items: center;
+    }
+
+    .password {
+        border: 2px solid #5faed6; /* Match button border color */
+        border-radius: 20px 0px 0px 20px; /* Rounded edges */
+        padding: 8px 12px; /* Spacing inside input */
+        font-size: 16px;
+        outline: none;
+        background-color: white;
+        color: black;
+        letter-spacing: 15px;
+        caret-color: transparent;
+        max-width:50vw;
+    }
+
+    .password::placeholder {
+        color:#cfe9f8;
+        letter-spacing: 2px;
+    }
+
+    .submit-password {
+        border: 2px solid #5faed6; /* Match button border color */
+        border-radius: 0px 20px 20px 0px; /* Rounded edges */
+        padding: 8px 20px; /* Spacing inside input */
+        margin-left: -6px;
+        font-size: 16px;
+        outline: none;
+        background-color: #e5f3fb;
+        color:#50b3e5;
+        cursor: pointer;
+    }
+
+    .round-blue {
+        width: 150px; 
+        border: 2px solid #5faed6;
+        color:#50b3e5;
+        background-color: #e5f3fb;
+        border-radius:20px;
+        padding: 10px;
+        margin-top: 20px;
+        cursor: pointer;
+    }
+
+    .round-blue:hover {
+        background-color:#50b3e5;
+        color: #e5f3fb;
+    }
+
+  .round-grey {
+        width: 150px; 
+        border: 2px solid #c8cacb;
+        color:#c8cacb;
+        background-color: transparent;
+        border-radius:20px;
+        padding: 5px;
+        margin-top: 20px;
+        cursor: pointer;
+    }
+
+    .round-grey:hover {
+        background-color:#c8cacb;
+        color: #fff;
+    }
+
+    .discrete {
+        height: auto; 
+        aspect-ratio:1/1 !important;
+        margin-right: -50px;
+        font-size:1.1em;
+        border: 2px solid #fbfdfe;
+        color:#c8cacb;
+        background-color: #fbfdfe;
+        border-radius:50%;
+        padding: 10px;
+        margin-top: 20px;
+        cursor: pointer;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .discrete:hover {
+        aspect-ratio:1/1 !important;
+        color:#fbfdfe;
+        background-color: #c8cacb;
+        transform: rotate(360deg); /* Rotate the element on hover */
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .discrete:active {
+        aspect-ratio:1/1 !important;
+        color:#fbfdfe;
+        opacity:0.5;
+        background-color: #c8cacb;
+        transform: rotate(360deg); /* Rotate the element on hover */
+        animation: spin 0.2s linear infinite;
+    }
+
+    .footer {
+        position: relative;
+        bottom: 10px;
+        background: transparent;
+        color: #7c7d7e;
+        font-size: 16px;
+        border-radius:20px 20px 0px 0px;
+        padding: 10px;
+        width:100vw;
+    }
+
+    .grid-wrapper {
+        display: flex;
+        justify-content: center;
+        width: 100vw;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 320px));
+        gap: 20px;
+        max-width: 100%;
+        padding: 10px;
+        justify-content: center;
+    }
+
+    .center-container{
+        display: block;
+        max-width: 100vw;
+        min-width: 100vw;
+        width: 100vw;
+        padding: 10px;
+        justify-content: center;
+    }
+
+    .camFrame {
+        width: 300px;
+        height:auto;
+        border: 2px solid #ddd;
+        border-radius: 20px;
+        padding: 10px;
+        padding-bottom: 5px;
+        text-align: center;
+    }
+
+    .timeLabel {
+        font-weight: bold; /* Make text bold */
+        display: inline-flex; /* Allows flexible width */
+        max-width: 100%;
+        align-items: center; /* Align icon and text */
+        width: fit-content; /* Adapt to container */
+        padding: 5px 10px; /* Optional padding */ 
+        margin-left:10%;
+        margin-right:10%;
+    }
+
+    .timeLabel::before {
+        content: "\f017"; /* Unicode clock icon */
+        font-family: "Font Awesome 5 Free";
+        margin-right: 8px; /* Space between icon and text */
+    }
+
+    .nameLabel {
+        font-size: 1.5em;
+        display: inline-flex; /* Allows flexible width */
+        max-width: 100%;
+        align-items: center; /* Align icon and text */
+        width: fit-content; /* Adapt to container */
+        margin-top:-5px;
+        margin-bottom:-5px;
+        padding: 2px; /* Optional padding */ 
+        color: #a9a9a9;
+    }
+
+    .warning {
+        color:#cb374f;
+    }
+
+    img {
+        max-width: 100%;
+        border-radius:10px;
+        cursor: zoom-in;
+    }
+    a{
+
+    }
+    .password-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 18vh;
+    }
+
+    /* Loader Container - Initially hidden */
+    .loader-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex; /* Add this to make the container a flex container */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
+        z-index: 9999;
+        display: none; /* Hidden by default */
+    }
+
+    /* Loader */
+    .loader {
+        position: fixed;
+        border: 6px solid #f3f3f3; /* Light gray background color */
+        border-top: 6px solid #50b3e5; /* Blue color for the top border */
+        border-radius: 50%;
+        width: 50px; /* Size of the spinner */
+        height: 50px; /* Size of the spinner */
+        animation: spin 1s linear infinite; /* Animation to spin the loader */
+        top: calc(50vh - 25px);
+        left: calc(50vw - 25px);
+        z-index:999;
+    }
+
+
+    .icon-rotate {
+        display: inline-block; /* Ensures it behaves like an inline element */
+        animation: rotate 2s linear infinite; /* Rotate the icon every 2 seconds */
+    }
+
+    /* Keyframes to define the rotation behavior */
+    @keyframes rotate {
+        from {
+            transform: rotate(0deg); /* Start at 0 degrees */
+        }
+        to {
+            transform: rotate(360deg); /* Rotate to 360 degrees (one full rotation) */
+        }
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .imageViewer {
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 80%;
+        max-height: 80%;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 10px;
+        display: none;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+        z-index: 9999;
+    }
+</style>
+
+<body>
+
+
+  <!-- Main title of the page -->
+  <h1 style="color:#205d7c;">OS 3DP Camera Fleet</h1>
+
+  <!-- GitHub Repository Button -->
+  <button class="round-blue" title="Go to main GitHub repository" onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/tree/main/")'>
+    <a> <i class="fa-brands fa-github"></i> Main Git </a>
+  </button>
+
+  <!-- README Documentation Button -->
+  <button class="round-blue" title="Go to README documentation" onclick='goTo("https://github.com/arthurvangeersdaele/camfleet/blob/main/README.md")'>
+    <a> <i class="fa-regular fa-newspaper"></i> READ ME </a>
+  </button>
+
+  <!-- Refresh Button (hidden initially) -->
+  <button id="refresh" onclick='refreshData()' class="discrete" title="Refresh with the most recent image available" style="display:none;">
+    <i class="fa-solid fa-circle-dot" style="margin-right:-22px; z-index:0;"></i> 
+    <i class="fa-solid fa-arrow-rotate-right" style="color:#cb374f; font-size:1.0em; z-index:1;"></i>
+  </button>
+
+  <!-- Authorization Form -->
+  <div class="password-container" id="logInScreen">
+    <form onsubmit="handleSubmit(event)">
+      <script>
+        // Prevents form submission and triggers authorization function
+        function handleSubmit(event) {
+          event.preventDefault(); // Prevent the form from being submitted
+          authorize();
+        }
+      </script>
+
+      <!-- Password Input Field -->
+      <input class="password" type="password" autofocus maxlength="4" id="userInput" placeholder="Password">
+      <!-- Submit Button for Password -->
+      <button class="submit-password"><i class="fa-solid fa-right-to-bracket"></i></button>
+    </form>
+
+    <!-- Warning Message if Authorization is Incorrect -->
+    <p id="warning-authorize" class="warning" style="display:none; position: absolute; margin-bottom:-100px;">
+      <i class="fa-solid fa-face-frown icon-rotate"></i> Wrong password <br> Password forgotten ? Contact repo owner ...
+    </p>
+  </div>
+
+  <!-- Loading Screen (initially hidden) -->
+  <div class="loader-container" id="loadingScreen" style="display:none">
+      <div class="loader"> </div>
+  </div>
+
+  <!-- Image Viewer (Initial Image Display) -->
+  <img id="image_viewer" class="imageViewer">
+
+  <!-- Delay Warning Message -->
+  <p id="warning-delays" class="warning" style="display:none"> A delay of 1 to 2 minutes is to be expected, for a shot about every 30 seconds. </p>
+
+  <!-- Grid Wrapper for Image Container -->
+  <div class='grid_wrapper'>
+    <div class="grid-container" id="imageContainer"></div>
+  </div>
+
+  <!-- Secondary buttons (initially hidden) --> 
+  <div id="secondary-buttons" class="center-container" style="display:none;">
+    <!-- download repo files as a zip --> 
+    <button class="round-grey" title="Download .ZIP file with 48h old archives" onclick='goTo(getRepoZipUrl())'>
+      <a> <i class="fa-solid fa-file-zipper"></i> Download files </a>
+    </button>
+    <!-- contact repo owner -->
+    <button class="round-grey" title="Contact repo owner" onclick='goTo(`https://github.com/${OWNER}`)'>
+      <a> <i class="fa-solid fa-user"></i> Contact Owner </a>
+    </button>
+
+
+    <!-- contact repo owner -->
+    <button class="round-grey" title="Contact project developer" onclick='goTo("https://github.com/arthurvangeersdaele")'>
+      <a> <i class="fa-solid fa-lightbulb"></i> Contact Developer </a>
+    </button>
+  </div>
+
+  <!-- Blank Space (for layout spacing) -->
+  <div class="blank"></div>
+
+  <!-- Footer Information -->
+  <div class="footer" id="footer">
+    <p> Cam-Fleet is an Open-Source solution based on GitHub Services to freely manage a fleet of ESP32-CAM.</p>
+    <p style="font-size:10px"> Developed by Arthur VG DG</p>
+    <p style="font-size:10px"> Copyright 2025, <a href='http://www.apache.org/licenses/'> Apache License v2.0, Jan 2004 </a></p>
+  </div>
+
+  <script>
+// _    _   ______   ______  ______     ______  ______   ______   ______ 
+// | |  | | / |      | |     | |  | \       / / / |  | \ | |  \ \ | |     
+// | |  | | '------. | |---- | |__| |    .---'  | |  | | | |  | | | |---- 
+// \_|__|_|  ____|_/ |_|____ |_|  \_\   /_/___  \_|__|_/ |_|  |_| |_|____ 
+
+const OWNER = 'arthurvangeersdaele'; // replace by your own github name, please do not keep mine as you won't be able to authenticate
+const GITHUB_TOKEN_CRYPTED = "X1xJbm9xf1hPBkprWnx2UnkMTmEMTXJISU1cS2hhV1JVcwthdExhUA=="; // replace with your own crypted token (see README documentation)
+const GMT = 2; //GMT+2
+
+
+
+// _____    ______   ______   ______   ______  ______     ______  ______   ______   ______ 
+// | | \ \  | |  | | | |  \ \ | | ____ | |     | |  | \       / / / |  | \ | |  \ \ | |     
+// | |  | | | |__| | | |  | | | |  | | | |---- | |__| |    .---'  | |  | | | |  | | | |---- 
+// |_|_/_/  |_|  |_| |_|  |_| |_|__|_| |_|____ |_|  \_\   /_/___  \_|__|_/ |_|  |_| |_|____ 
+
+const REPO = 'camfleet'; // replace ONLY if you changed the repository name
+
+// (X) do not change anything below (X)
+let GITHUB_TOKEN = null;
+let authorized = false;
+let loaded = false;
+
+// Function to handle authorization
+async function authorize() {
+    let userValue = document.getElementById("userInput").value;
+    GITHUB_TOKEN = decryptToken(GITHUB_TOKEN_CRYPTED, userValue);
+    console.log('TOKEN:', GITHUB_TOKEN);
+    // verifying header token
+    const mainUrl = `https://api.github.com/repos/${OWNER}/${REPO}`;
+    try{
+    const response = await fetch(mainUrl, {
+        headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (response.ok){
+      authorized = true;
+      document.activeElement.blur();
+    } else{
+      document.getElementById("warning-authorize").style.display = "block";
+      document.getElementById("footer").style.display = "none";
+      document.getElementById("userInput").value = "";
+    }
+  } catch {
+      document.getElementById("warning-authorize").style.display = "block";
+      document.getElementById("footer").style.display = "none";
+      document.getElementById("userInput").value = "";
+    }
+}
+
+// Function to decrypt the GitHub token
+function decryptToken(cryptedToken, passcode) {
+    let decrypted = '';
+    let encrypted = atob(cryptedToken); // Decode Base64
+    for (let i = 0; i < encrypted.length; i++) {
+        decrypted += String.fromCharCode(encrypted.charCodeAt(i) ^ passcode.charCodeAt(i % passcode.length));
+    }
+    return decrypted;
+}
+
+// Function to fetch the recent images from the GitHub repo
+async function fetchRecentImages() {
+    try {
+        const camFolders = await fetchRepoFolders();
+        console.log(camFolders);
+        const imageUrls = await fetchImagesFromFolders(camFolders);
+        await displayImages(imageUrls);
+    } catch (error) {
+        console.error('Error fetching images:', error);
+    }
+}
+
+// Function to fetch repo folders
+async function fetchRepoFolders() {
+    const repoUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
+    const response = await fetch(repoUrl, {
+        headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!response.ok) throw new Error(`Failed to fetch repo contents: ${response.statusText}`);
+    const folders = await response.json();
+    return folders.filter(item => item.type === 'dir' && item.name.startsWith('ESP32-CAM_'));
+}
+
+// Function to fetch image details from each folder
+async function fetchImagesFromFolders(camFolders) {
+    const imageUrls = [];
+    for (const folder of camFolders) {
+        const commitData = await fetchCommitData(folder.name);
+        if (commitData) {
+            const imageUrl = await fetchImageUrl(commitData);
+            imageUrls.push(imageUrl);
+        }
+    }
+    return imageUrls;
+}
+
+// Function to fetch commit data for a folder
+async function fetchCommitData(folderName) {
+    const commitUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?path=${folderName}&per_page=1`;
+    const commitResponse = await fetch(commitUrl, {
+        headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!commitResponse.ok) {
+        console.error(`Failed to fetch commit history for ${folderName}`);
+        return null;
+    }
+    const commitData = await commitResponse.json();
+    if (commitData.length === 0) return null;
+    return commitData[0];
+}
+
+// Function to fetch image URL from the commit data
+async function fetchImageUrl(commitData) {
+    console.log(commitData);
+    const parentUrl = commitData.url;
+    const data = await fetchJsonData(parentUrl);
+    const imageFile = data.files[0];
+    return {
+        url: imageFile.raw_url,
+        name: extractCamNameFromFilename(imageFile.filename),
+        time: extractTimeFromFilename(imageFile.filename),
+    };
+}
+
+// Function to fetch JSON data from a URL
+async function fetchJsonData(url) {
+    const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!response.ok) throw new Error(`Failed to fetch data: ${response.statusText}`);
+    return response.json();
+}
+
+// Function to extract time from the filename
+function extractTimeFromFilename(filename) {
+    const regex = /(\d{8})-(\d{6})/;
+    const match = filename.match(regex);
+    if (match) {
+        const [dateString, timeString] = [match[1], match[2]];
+        const date = new Date(
+            parseInt(dateString.substring(0, 4), 10),
+            parseInt(dateString.substring(4, 6), 10) - 1,
+            parseInt(dateString.substring(6, 8), 10),
+            parseInt(timeString.substring(0, 2), 10),
+            parseInt(timeString.substring(2, 4), 10),
+            parseInt(timeString.substring(4, 6), 10)
+        );
+        return date;
+    }
+    return null;
+}
+
+// Function to extract source Cam Name from the filename
+function extractCamNameFromFilename(filename) {
+    const regex = /ESP32-CAM_(\w+)(?=\/\d{8}-\d{6})/;
+    const match = filename.match(regex);
+
+    if (match) {
+        const camName = match[1];  // Captured camera name (e.g., 'Nomad')
+        return camName;
+    }
+
+    return null;
+}
+
+// Function to display the images in the UI
+async function displayImages(imageUrls) {
+    const container = document.getElementById('imageContainer');
+    container.innerHTML = '';
+    imageUrls.forEach(({ url, name, time }) => {
+      if (url.includes('.jpg') && url.includes('ESP32-CAM_')) { 
+          const camFrame = createCamFrame(url, name, time);
+          container.appendChild(camFrame);
+      }
+      else{
+        console.error('A commit is does not contains an image')
+      }
+    });
+}
+
+// Function to create a single camera frame with an image and its metadata
+function createCamFrame(url, name, time) {
+    const camFrame = document.createElement('div');
+    camFrame.className = 'camFrame';
+
+    const img = document.createElement('img');
+    img.src = url;
+    img.setAttribute("draggable", "false");
+
+    const nameLabel = document.createElement('p');
+    nameLabel.textContent = name;
+    nameLabel.classList.add('nameLabel');
+
+    const timeLabel = createTimeLabel(time);
+    camFrame.appendChild(img);
+    camFrame.appendChild(nameLabel);
+    camFrame.appendChild(timeLabel);
+
+    return camFrame;
+}
+
+// Function to create a time label
+function createTimeLabel(time) {
+    let camDate = new Date(time);
+    timeshift = GMT - 1 ; // ESP32-CAM are coded on GMT+1
+    camDate.setHours(camDate.getHours() + timeshift);
+    let formattedDate = formatDate(camDate);
+    let timeLabel = document.createElement('p');
+    timeLabel.classList.add("timeLabel");
+    timeLabel.textContent = formattedDate;
+
+    styleTimeLabel(timeLabel, camDate);
+    return timeLabel;
+}
+
+// Function to format the date into a readable string
+function formatDate(date) {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${day}/${month}/${year} - ${hours}h${minutes}`;
+}
+
+// Function to style the time label based on the image age
+function styleTimeLabel(timeLabel, camDate) {
+    let now = new Date();
+    let diffInMilliseconds = now - camDate;
+    if (diffInMilliseconds > 2 * 60 * 60 * 1000) {
+        timeLabel.style.color = "#cb374f"; // Red color for older images
+    } else if (diffInMilliseconds > 10 * 60 * 1000) {
+        timeLabel.style.color = "#dd703e"; // Orange color for medium age images
+    }
+}
+
+// Function to open a URL in a new window
+function goTo(url) {
+    window.open(url, '_blank');
+}
+
+// Function to handle the refresh logic
+function refreshData() {
+
+    fetchRecentImages().then(() => {
+        addImageClickListeners();
+        if(!loaded){
+          document.getElementById('loadingScreen').style.display = 'none';
+          loaded = true;
+        }
+    });
+    setInterval(refreshData, 300000); // Refresh every 5 minutes
+}
+
+// Function to add event listeners to images for viewing
+function addImageClickListeners() {
+    let viewer = document.getElementById('image_viewer');
+    viewer.setAttribute("draggable", "false");
+    document.querySelectorAll("img").forEach(img => {
+        img.addEventListener("mousedown", event => {
+            viewer.src = img.src;
+            viewer.style.display = "block";
+            console.log('test');
+            event.stopPropagation();
+        });
+    });
+
+    document.body.addEventListener("click", () => {
+        if (viewer.style.display === "block") {
+            viewer.style.display = "none";
+        }
+    });
+}
+
+
+let checkAuthInterval = setInterval(() => {
+    if (authorized) {
+        // Once authorized, hide loading screen and show refresh button
+        document.getElementById('logInScreen').style.display = 'none';
+        document.getElementById('refresh').style.display = 'inline';
+        document.getElementById('loadingScreen').style.display = 'block';
+        document.getElementById('secondary-buttons').style.display = 'block';
+
+        // Call refreshData() once authorized
+        refreshData();
+
+        // Clear the interval once authorized
+        clearInterval(checkAuthInterval);
+    }
+}, 500); // Check every 500ms
+
+function getRepoZipUrl(branch = "main") {
+    return `https://github.com/${OWNER}/${REPO}/archive/refs/heads/${branch}.zip`;
+}
+
+</script>
+
+</body>
+
+
+
+</html>
+ 
