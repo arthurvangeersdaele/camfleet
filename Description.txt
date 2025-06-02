@@ -1,0 +1,11 @@
+camfleet
+
+ESP32-CAM based  worldwide public camera surveillance for 3D-printing labs
+
+topics: 
+
+security 
+camera 
+surveillance 
+data-collection 
+3d-printing
